@@ -102,3 +102,10 @@ Below is a summary of the basic rules of the competition:
 
 ## 7. Concluding remark
 Thank you for participating in our challenge. Now, go off and be EPiC!
+
+---
+
+## Setup remarks
+```
+pip install -r requirements
+```
