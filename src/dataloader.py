@@ -4,10 +4,13 @@
 # """
 #     property:
 #         train_subs, train_vids, test_subs, test_vids, fold, scenario, keys
-#     function:
-#         train_data(...),
-#         test_data(...),
-#         train_test_groups(...)
+#     function: 'feature(s)' is an optinal parameter, str or list of str
+#         S1: train_data(sub, vid, <feature(s)>) -> tuple (X, y)
+#         S2, 3, 4: train_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
+#         S1: test_data(sub, vid, <feature(s)>) -> tuple (X, y)
+#         S2, 3, 4: test_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
+
+#         train_test_groups(...) -> list(dict('train': [(sub, vid), ..., (sub, vid)], 'test': [(sub, vid), ..., (sub, vid)]))
 # """
 
 import os, re
