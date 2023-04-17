@@ -1,15 +1,25 @@
 # to use the dataloader, in the notebook, run the following code
 # sys.path.append(os.path.relpath("../src/"))
 # from dataloader import S1, S2, S3, S4
+
+# s1 = S1()
+# s2 = S2()
+# s3 = S3()
+# s4 = S4()
+
 # """
 #     property:
 #         train_subs, train_vids, test_subs, test_vids, fold, scenario, keys
-#     function: 'feature(s)' is an optinal parameter, str or list of str
-#         S1: train_data(sub, vid, <feature(s)>) -> tuple (X, y)
-#         S2, 3, 4: train_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
-#         S1: test_data(sub, vid, <feature(s)>) -> tuple (X, y)
-#         S2, 3, 4: test_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
-
+#     function: 
+#         S1:
+#           train_data(sub, vid, <feature(s)>) -> tuple (X, y)
+#           test_data(sub, vid, <feature(s)>) -> tuple (X, y)
+#         S2, 3, 4
+#           train_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
+#           test_data(fold, sub, vid, <feature(s)>) -> tuple (X, y)
+#        'feature(s)' is an optinal parameter, str or list of str
+#
+#         return list of train_test pairs for each model.
 #         train_test_groups(...) -> list(dict('train': [(sub, vid), ..., (sub, vid)], 'test': [(sub, vid), ..., (sub, vid)]))
 # """
 
