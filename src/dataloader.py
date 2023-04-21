@@ -9,7 +9,8 @@
 
 # """
 #     property:
-#         train_subs, train_vids, test_subs, test_vids, fold, scenario, keys
+#         train_subs, train_vids, test_subs, test_vids, fold, scenario, keys, 
+#         update Apr 21: train_test_indices
 #     function: 
 #         S1:
 #           train_data(sub, vid, <feature(s)>) -> tuple (X, y)
@@ -126,10 +127,21 @@ class BaseLoader():
         """
         return self._load_data(f'data/scenario_{self.scenario}/fold_{fold}/test', sub, vid, features)
 
+    @property
+    def train_test_indices(self):
+        """
+            return dict('train', 'test')
+        """
+        return {
+                'train': [[(sub, vid) for vid in self.train_vids] for sub in self.train_subs],
+                'test': [[(sub, vid) for vid in self.test_vids] for sub in self.test_subs]
+            }
+
 
 class S1(BaseLoader):
     def __init__(self, path_prefix='../'):
         super().__init__(1, [], path_prefix)
+
 
     def train_test_groups(self):
         return [{
