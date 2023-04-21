@@ -45,9 +45,11 @@ class BaseLoader():
         if self.fold == []:
             self.train_data = self._train_data_without_fold
             self.test_data = self._test_data_without_fold
+            self.train_test_indices = self._train_test_indices_without_fold
         else:
             self.train_data = self._train_data_with_fold
             self.test_data = self._test_data_with_fold
+            self.train_test_indices = self._train_test_indices_with_fold
 
     
     def _initialization(self):
@@ -128,7 +130,7 @@ class BaseLoader():
         return self._load_data(f'data/scenario_{self.scenario}/fold_{fold}/test', sub, vid, features)
 
     @property
-    def train_test_indices(self):
+    def _train_test_indices_without_fold(self):
         """
             return dict('train', 'test')
         """
@@ -136,6 +138,16 @@ class BaseLoader():
                 'train': [(sub, vid) for vid in self.train_vids for sub in self.train_subs],
                 'test': [(sub, vid) for vid in self.test_vids for sub in self.test_subs]
             }
+
+    @property
+    def _train_test_indices_with_fold(self):
+        """
+            return dict('train', 'test')
+        """
+        return [{
+                'train': [(sub, vid) for vid in self.train_vids[i] for sub in self.train_subs[i]],
+                'test': [(sub, vid) for vid in self.test_vids[i] for sub in self.test_subs[i]]
+            } for i in self.fold]
 
 
 class S1(BaseLoader):
