@@ -133,8 +133,8 @@ class BaseLoader():
             return dict('train', 'test')
         """
         return {
-                'train': [[(sub, vid) for vid in self.train_vids] for sub in self.train_subs],
-                'test': [[(sub, vid) for vid in self.test_vids] for sub in self.test_subs]
+                'train': [(sub, vid) for vid in self.train_vids for sub in self.train_subs],
+                'test': [(sub, vid) for vid in self.test_vids for sub in self.test_subs]
             }
 
 
