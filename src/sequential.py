@@ -33,10 +33,10 @@ class SequenceEncoder(nn.Module):
         self.gru = nn.GRU(ninp, nhid, nlayers, dropout=dropout)
         # Output MLP
         dropout_layer = nn.Dropout(p=dropout) if dropout > 0 else nn.Identity()
-        fc_layers = [nn.Linear(nhid, nlinear_hid, bias=True), act_type, dropout_layer]
+        fc_layers = [nn.Linear(nhid, nlinear_hid, bias=True), act_type(), dropout_layer]
         fc_layers.extend(
             [item for _ in range(1, nlinear_layers)
-            for item in [nn.Linear(nlinear_hid, nlinear_hid, bias=True), act_type, dropout_layer]]
+            for item in [nn.Linear(nlinear_hid, nlinear_hid, bias=True), act_type(), dropout_layer]]
         )
         fc_layers.append(nn.Linear(nlinear_hid, nout, bias=True))
         self.out_linear = nn.Sequential(*fc_layers)
