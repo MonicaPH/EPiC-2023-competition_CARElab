@@ -59,7 +59,7 @@ for sub, vid in s1.train_test_indices['train']:
         feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
 
-    if args.emg_only == 1:
+    elif args.emg_only == 1:
         features = pd.read_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
         emg_zygo, emg_coru, emg_trap = emg_feature_extractor(X, y)
         features = pd.concat([features,
@@ -84,7 +84,7 @@ for sub, vid in s1.train_test_indices['test']:
         feature_extractor(X, y).set_index(y.index).to_csv(test_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         logging.info(f'scenario 1: extracted features for test data (sub = {sub} vid = {vid}).')
 
-    if args.emg_only == 1:
+    elif args.emg_only == 1:
         features = pd.read_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
         emg_zygo, emg_coru, emg_trap = emg_feature_extractor(X, y)
         features = pd.concat([features,
