@@ -53,7 +53,7 @@ for sub, vid in s1.train_test_indices['train']:
         continue
 
     X, y = s1.train_data(sub, vid)
-    feature_extractor(X, y).set_index(y.index).to_csv(test_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+    feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
     logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
 
 for sub, vid in s1.train_test_indices['test']:
