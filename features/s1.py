@@ -58,11 +58,10 @@ for sub, vid in s1.train_test_indices['train']:
     if args.emg_only == 1:
         features = pd.read_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
         emg_zygo, emg_coru, emg_trap = emg_feature_extractor(X, y)
-        dropped_cols = ['Label', 'Event_Onset']
         features = pd.concat([features,
-                              emg_zygo.drop(dropped_cols, axis=1).set_index(features.index),
-                              emg_coru.drop(dropped_cols, axis=1).set_index(features.index),
-                              emg_trap.drop(dropped_cols, axis=1).set_index(features.index)], axis=1).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+                              emg_zygo.set_index(features.index),
+                              emg_coru.set_index(features.index),
+                              emg_trap.set_index(features.index)], axis=1).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
 
     else:
         feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')

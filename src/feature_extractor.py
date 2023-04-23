@@ -87,9 +87,7 @@ def feature_extractor(X, y):
                       ecg.drop(dropped_cols, axis=1),
                       rsp.drop(dropped_cols, axis=1),
                       gsr.drop(dropped_cols, axis=1),
-                      emg_zygo.drop(dropped_cols, axis=1),
-                      emg_coru.drop(dropped_cols, axis=1),
-                      emg_trap.drop(dropped_cols, axis=1)], axis=1)
+                      emg_zygo, emg_coru, emg_trap], axis=1)
 
 def emg_feature_extractor(X, y):
     type = Signal.EMG
@@ -102,6 +100,12 @@ def emg_feature_extractor(X, y):
     signal = X['emg_trap']
     processed_signal = processor(signal, type)
     emg_trap = analyzer(processed_signal, y.index, type, 200, 200)
+
+
+    dropped_cols = ['Label', 'Event_Onset']
+    emg_zygo = emg_zygo.drop(dropped_cols, axis=1),
+    emg_coru = emg_coru.drop(dropped_cols, axis=1),
+    emg_trap = emg_trap.drop(dropped_cols, axis=1)
 
     emg_zygo.columns = list(map(lambda s: s + '_zygo', list(emg_zygo.columns)))
     emg_coru.columns = list(map(lambda s: s + '_coru', list(emg_coru.columns)))
