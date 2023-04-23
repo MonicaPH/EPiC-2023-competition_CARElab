@@ -48,19 +48,19 @@ def clean(file: str):
     ], axis=1)
 
     # process emg
-    emg_df1, emg_info1 = emg.process(
+    emg_df1, emg_info1 = emg.emg_process(
         df.emg_zygo,
         sampling_rate=fs,
     )
     emg_df1.columns = [x + '_zygo' for x in emg_df1.columns]
 
-    emg_df2, emg_info2 = emg.process(
+    emg_df2, emg_info2 = emg.emg_process(
         df.emg_coru,
         sampling_rate=fs,
     )
     emg_df2.columns = [x + '_coru' for x in emg_df2.columns]
 
-    emg_df3, emg_info3 = emg.process(
+    emg_df3, emg_info3 = emg.emg_process(
         df.emg_trap,
         sampling_rate=fs,
     )
