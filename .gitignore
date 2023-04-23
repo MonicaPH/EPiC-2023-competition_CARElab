@@ -1,6 +1,7 @@
 ###### Challenge-specific files
 data/*
 log/*
+features/scenario*
 
 
 ###### MacOS
