@@ -1,11 +1,13 @@
 import sys, os 
+import pandas as pd
 import numpy as np
 from pathlib import Path
 import argparse
 
+
 sys.path.append(os.path.relpath("../src/"))
 from dataloader import S1
-from feature_extractor import feature_extractor
+from feature_extractor import feature_extractor, emg_feature_extractor
 
 import logging, datetime
 
@@ -26,9 +28,8 @@ logging.basicConfig(format=log_format,
 
 parser = argparse.ArgumentParser(description='S1 feature extractor')
 parser.add_argument('--sub_group', type=int, help='1, 2, 3, default=None (all groups)')
+parser.add_argument('--emg_only', type=int, help='0(no), 1(yes), default=0', default=0)
 args = parser.parse_args()
-
-
 
 root_path = Path(__file__).parents[1]
 feature_path = root_path / 'features'
@@ -53,13 +54,24 @@ for sub, vid in s1.train_test_indices['train']:
         continue
 
     X, y = s1.train_data(sub, vid)
-    feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-    logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
 
-for sub, vid in s1.train_test_indices['test']:
-    if sub not in group:
-        continue
+    if args.emg_only == 1:
+        features = pd.read_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
+        emg_zygo, emg_coru, emg_trap = emg_feature_extractor(X, y)
+        dropped_cols = ['Label', 'Event_Onset']
+        features = pd.concat([features,
+                              emg_zygo.drop(dropped_cols, axis=1).set_index(features.index),
+                              emg_coru.drop(dropped_cols, axis=1).set_index(features.index),
+                              emg_trap.drop(dropped_cols, axis=1).set_index(features.index)], axis=1).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
 
-    X, y = s1.test_data(sub, vid)
-    feature_extractor(X, y).set_index(y.index).to_csv(test_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-    logging.info(f'scenario 1: extracted features for test data (sub = {sub} vid = {vid}).')
+    else:
+        feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
+
+    for sub, vid in s1.train_test_indices['test']:
+        if sub not in group:
+            continue
+
+        X, y = s1.test_data(sub, vid)
+        feature_extractor(X, y).set_index(y.index).to_csv(test_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        logging.info(f'scenario 1: extracted features for test data (sub = {sub} vid = {vid}).')
