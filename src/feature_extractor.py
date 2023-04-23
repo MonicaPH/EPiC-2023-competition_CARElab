@@ -103,8 +103,8 @@ def emg_feature_extractor(X, y):
 
 
     dropped_cols = ['Label', 'Event_Onset']
-    emg_zygo = emg_zygo.drop(dropped_cols, axis=1),
-    emg_coru = emg_coru.drop(dropped_cols, axis=1),
+    emg_zygo = emg_zygo.drop(dropped_cols, axis=1)
+    emg_coru = emg_coru.drop(dropped_cols, axis=1)
     emg_trap = emg_trap.drop(dropped_cols, axis=1)
 
     emg_zygo.columns = list(map(lambda s: s + '_zygo', list(emg_zygo.columns)))
