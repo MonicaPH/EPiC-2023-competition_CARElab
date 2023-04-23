@@ -8,7 +8,7 @@ if __name__ == '__main__':
     for x in p.rglob('*'):
         for file in x.glob('*.csv'):
             # prepare output directory
-            outPath = Path(str(file.parent).replace('data', 'clean'))
+            outPath = Path(str(file.parent).replace('data', 'data_clean'))
             if not outPath.exists():
                 outPath.mkdir(parents=True)
 
