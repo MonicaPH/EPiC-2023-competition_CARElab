@@ -7,7 +7,7 @@ import more_itertools
 from scipy.stats import zscore
 
 
-def emg_process(emg_signal, sampling_rate=1000, filterCutoff=5):
+def emg_process(emg_signal, threshold=0.1, sampling_rate=1000, filterCutoff=5):
 
     # Sanitize input
     emg_signal = nk.signal_sanitize(emg_signal)
@@ -39,9 +39,12 @@ def emg_process(emg_signal, sampling_rate=1000, filterCutoff=5):
     amplitude = nk.emg_amplitude(emg_cleaned)
 
     # Get onsets, offsets, and periods of activity
-    activity_signal, info = nk.emg_activation(
-        amplitude, sampling_rate=sampling_rate, threshold="default"
-    )
+    # activity_signal, info = nk.emg_activation(
+    #     amplitude, sampling_rate=sampling_rate, threshold="default"
+    # )
+
+    # use threshold * stddev (instead of 0.1*stddev)
+    activity_signal, info = emg_activity(amplitude, threshold=threshold, sampling_rate=sampling_rate)
     info["sampling_rate"] = sampling_rate  # Add sampling rate in dict info
 
     # Prepare output
@@ -125,3 +128,78 @@ def local_filter(data, notch, width, flow, fhigh, fs):
         data = notch_filter(data, notch, width, fs)
     data = elliptic_filter(data, flow, fhigh, fs)
     return signal.detrend(data)
+
+def emg_activity(emg_amplitude, threshold, sampling_rate=1000):
+    duration_min = int(0.05 * sampling_rate)
+    threshold = threshold * np.std(emg_amplitude)
+    activity = nk.signal_binarize(emg_amplitude, method="threshold", threshold=threshold)
+
+    # Sanitize activity.
+    info = _emg_activation_activations(activity, duration_min=duration_min)
+
+    # Prepare Output.
+    df_activity = nk.signal_formatpeaks(
+        {"EMG_Activity": info["EMG_Activity"]},
+        desired_length=len(emg_amplitude),
+        peak_indices=info["EMG_Activity"],
+    )
+    df_onsets = nk.signal_formatpeaks(
+        {"EMG_Onsets": info["EMG_Onsets"]},
+        desired_length=len(emg_amplitude),
+        peak_indices=info["EMG_Onsets"],
+    )
+    df_offsets = nk.signal_formatpeaks(
+        {"EMG_Offsets": info["EMG_Offsets"]},
+        desired_length=len(emg_amplitude),
+        peak_indices=info["EMG_Offsets"],
+    )
+
+    # Modify output produced by signal_formatpeaks.
+    for x in range(len(emg_amplitude)):
+        if df_activity["EMG_Activity"][x] != 0:
+            if df_activity.index[x] == df_activity.index.get_loc(x):
+                df_activity["EMG_Activity"][x] = 1
+            else:
+                df_activity["EMG_Activity"][x] = 0
+        if df_offsets["EMG_Offsets"][x] != 0:
+            if df_offsets.index[x] == df_offsets.index.get_loc(x):
+                df_offsets["EMG_Offsets"][x] = 1
+            else:
+                df_offsets["EMG_Offsets"][x] = 0
+
+    activity_signal = pd.concat([df_activity, df_onsets, df_offsets], axis=1)
+
+    return activity_signal, info
+
+# =============================================================================
+# Neurokit Internals
+# =============================================================================
+def _emg_activation_activations(activity, duration_min=0.05):
+
+    activations = nk.events_find(
+        activity, threshold=0.5, threshold_keep="above", duration_min=duration_min
+    )
+    activations["offset"] = activations["onset"] + activations["duration"]
+
+    baseline = nk.events_find(
+        activity == 0, threshold=0.5, threshold_keep="above", duration_min=duration_min
+    )
+    baseline["offset"] = baseline["onset"] + baseline["duration"]
+
+    # Cross-comparison
+    valid = np.isin(activations["onset"], baseline["offset"])
+    onsets = activations["onset"][valid]
+    offsets = activations["offset"][valid]
+
+    # make sure offset indices are within length of signal
+    offsets = offsets[offsets < len(activity)]
+
+    new_activity = np.array([])
+    for x, y in zip(onsets, offsets):
+        activated = np.arange(x, y)
+        new_activity = np.append(new_activity, activated)
+
+    # Prepare Output.
+    info = {"EMG_Onsets": onsets, "EMG_Offsets": offsets, "EMG_Activity": new_activity}
+
+    return info
