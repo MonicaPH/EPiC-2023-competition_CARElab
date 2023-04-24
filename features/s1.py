@@ -24,7 +24,7 @@ logging.basicConfig(format=log_format,
                     level=logging.INFO
                     )
 
-root_path = Path('../').parents[1]
+root_path = Path('../')
 
 def check_dir(*dirs):
     for d in dirs:
