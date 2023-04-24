@@ -2,6 +2,7 @@
 data/*
 log/*
 features/scenario*
+features/figures
 
 
 ###### MacOS
