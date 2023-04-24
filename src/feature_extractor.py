@@ -58,57 +58,62 @@ def analyzer(signal, keypoints, type, window_size_past, window_size_future, samp
     
     return df
 
-def feature_extractor(X, y):
+def feature_extractor(X, y, is_extract_features=True):
     signal = X['bvp']
     type = Signal.PPG
-    processed_signal = processor(signal, type)
-    bvp = analyzer(processed_signal, y.index, type, 5000, 5000)
+    bvp_signal = processor(signal, type)
     
     signal = X['ecg']
     type = Signal.ECG
-    processed_signal = processor(signal, type)
-    ecg = analyzer(processed_signal, y.index, type, 10000, 10000)
+    ecg_signal = processor(signal, type)
     
     signal = X['rsp']
     type = Signal.RSP
-    processed_signal = processor(signal, type)
-    rsp = analyzer(processed_signal, y.index, type, 4000, 4000)
+    rsp_signal = processor(signal, type)
     
     signal = X['gsr']
     type = Signal.EDA
-    processed_signal = processor(signal, type)
-    gsr = analyzer(processed_signal, y.index, type, 2500, 2500)
+    gsr_signal = processor(signal, type)
 
-    emg_zygo, emg_coru, emg_trap = emg_feature_extractor(X, y)
-
-    dropped_cols = ['Label', 'Event_Onset']
-    
-    return pd.concat([bvp.drop(dropped_cols, axis=1),
-                      ecg.drop(dropped_cols, axis=1),
-                      rsp.drop(dropped_cols, axis=1),
-                      gsr.drop(dropped_cols, axis=1),
-                      emg_zygo, emg_coru, emg_trap], axis=1)
-
-def emg_feature_extractor(X, y):
     type = Signal.EMG
     signal = X['emg_zygo']
-    processed_signal = processor(signal, type)
-    emg_zygo = analyzer(processed_signal, y.index, type, 200, 200)
+    emg_zygo_signal = processor(signal, type)
     signal = X['emg_coru']
-    processed_signal = processor(signal, type)
-    emg_coru = analyzer(processed_signal, y.index, type, 200, 200)
+    emg_coru_signal = processor(signal, type)
     signal = X['emg_trap']
-    processed_signal = processor(signal, type)
-    emg_trap = analyzer(processed_signal, y.index, type, 200, 200)
+    emg_trap_signal = processor(signal, type)
 
+    emg_zygo_signal.columns = list(map(lambda s: s + '_zygo', list(emg_zygo_signal.columns)))
+    emg_coru_signal.columns = list(map(lambda s: s + '_coru', list(emg_coru_signal.columns)))
+    emg_trap_signal.columns = list(map(lambda s: s + '_trap', list(emg_trap_signal.columns)))
 
-    dropped_cols = ['Label', 'Event_Onset']
-    emg_zygo = emg_zygo.drop(dropped_cols, axis=1)
-    emg_coru = emg_coru.drop(dropped_cols, axis=1)
-    emg_trap = emg_trap.drop(dropped_cols, axis=1)
+    processed_signal = pd.concat([ecg_signal, bvp_signal, gsr_signal, rsp_signal, emg_zygo_signal, emg_coru_signal, emg_trap_signal], axis=1).set_index(X.index)
 
-    emg_zygo.columns = list(map(lambda s: s + '_zygo', list(emg_zygo.columns)))
-    emg_coru.columns = list(map(lambda s: s + '_coru', list(emg_coru.columns)))
-    emg_trap.columns = list(map(lambda s: s + '_trap', list(emg_trap.columns)))
+    if is_extract_features:
+        gsr = analyzer(gsr_signal, y.index, type, 2500, 2500)
+        rsp = analyzer(rsp_signal, y.index, type, 4000, 4000)
+        ecg = analyzer(ecg_signal, y.index, type, 10000, 10000)
+        bvp = analyzer(bvp_signal, y.index, type, 5000, 5000)
+        emg_zygo = analyzer(emg_zygo_signal, y.index, type, 200, 200)
+        emg_coru = analyzer(emg_coru_signal, y.index, type, 200, 200)
+        emg_trap = analyzer(emg_trap_signal, y.index, type, 200, 200)
 
-    return emg_zygo, emg_coru, emg_trap
+        dropped_cols = ['Label', 'Event_Onset']
+        emg_zygo = emg_zygo.drop(dropped_cols, axis=1)
+        emg_coru = emg_coru.drop(dropped_cols, axis=1)
+        emg_trap = emg_trap.drop(dropped_cols, axis=1)
+
+        emg_zygo.columns = list(map(lambda s: s + '_zygo', list(emg_zygo.columns)))
+        emg_coru.columns = list(map(lambda s: s + '_coru', list(emg_coru.columns)))
+        emg_trap.columns = list(map(lambda s: s + '_trap', list(emg_trap.columns)))
+
+        extracted_features = pd.concat([bvp.drop(dropped_cols, axis=1),
+                              ecg.drop(dropped_cols, axis=1),
+                              rsp.drop(dropped_cols, axis=1),
+                              gsr.drop(dropped_cols, axis=1),
+                              emg_zygo, emg_coru, emg_trap], axis=1).set_index(y.index)
+
+    else:
+        extracted_features = None
+
+    return processed_signal, extracted_features
