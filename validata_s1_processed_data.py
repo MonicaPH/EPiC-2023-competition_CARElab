@@ -3,10 +3,9 @@ import numpy as np
 import os
 import sys
 from pathlib import Path
-from features.s1 import check_dir
 
 from src.dataloader import S1
-from src.utils import data_splitter
+from src.utils import data_splitter, check_dir
 from autogluon.tabular import TabularDataset, TabularPredictor
 
 import warnings
@@ -19,7 +18,7 @@ log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 logging.basicConfig(format=log_format, 
                     force=True,
                     handlers=[
-                        logging.FileHandler(f"../log/{log_filename}.log"),
+                        logging.FileHandler(f"log/{log_filename}.log"),
                         logging.StreamHandler()
                         ],
                     level=logging.INFO
