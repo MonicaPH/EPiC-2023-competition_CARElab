@@ -101,33 +101,33 @@ class BaseLoader():
         
         return features
     
-    def _train_data_without_fold(self, sub: int, vid: int, features=[]):
+    def _train_data_without_fold(self, sub: int, vid: int, features=[], root_dir='data'):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(f'data/scenario_{self.scenario}/train', sub, vid, features)
+        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/train'), sub, vid, features)
     
-    def _test_data_without_fold(self, sub: int, vid: int, features=[]):
+    def _test_data_without_fold(self, sub: int, vid: int, features=[], root_dir='data'):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(f'data/scenario_{self.scenario}/test', sub, vid, features)
+        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/test'), sub, vid, features)
 
-    def _train_data_with_fold(self, fold:int, sub: int, vid: int, features=[]):
+    def _train_data_with_fold(self, fold:int, sub: int, vid: int, features=[], root_dir='data'):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(f'data/scenario_{self.scenario}/fold_{fold}/train', sub, vid, features)
+        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/fold_{fold}/train'), sub, vid, features)
 
-    def _test_data_with_fold(self, fold:int, sub: int, vid: int, features=[]):
+    def _test_data_with_fold(self, fold:int, sub: int, vid: int, features=[], root_dir='data'):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(f'data/scenario_{self.scenario}/fold_{fold}/test', sub, vid, features)
+        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/fold_{fold}/test'), sub, vid, features)
 
     @property
     def _train_test_indices_without_fold(self):
