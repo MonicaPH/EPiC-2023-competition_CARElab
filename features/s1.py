@@ -24,26 +24,49 @@ logging.basicConfig(format=log_format,
                     level=logging.INFO
                     )
 
-root_path = Path(__file__).parents[1]
-feature_path = root_path / 'features'
-scenario_path = feature_path / 'scenario_1'
-train_path = scenario_path / 'train'
-test_path = scenario_path / 'test'
+root_path = Path('../').parents[1]
 
-if not scenario_path.exists():
-    scenario_path.mkdir(parents=True)
-if not train_path.exists():
-    train_path.mkdir(parents=True)
-if not test_path.exists():
-    test_path.mkdir(parents=True)
+def check_dir(*dirs):
+    for d in dirs:
+        if not d.exists():
+            d.mkdir(parents=True)
+
+processed_data_path = root_path / 'processed_data'
+train_data_path = processed_data_path / 'scenario_1' / 'train'
+test_data_path = processed_data_path / 'scenario_1' / 'test'
+
+feature_path = root_path / 'features'
+train_feature_path = feature_path / 'scenario_1' / 'train'
+test_feature_path = feature_path / 'scenario_1' / 'test'
+
+check_dir(processed_data_path,
+          train_data_path,
+          test_data_path,
+          feature_path,
+          train_feature_path,
+          test_feature_path)
 
 s1 = S1()
 for sub, vid in s1.train_test_indices['train']:
     X, y = s1.train_data(sub, vid)
-    feature_extractor(X, y).set_index(y.index).to_csv(train_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+
+    if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+        processed_data, features = feature_extractor(X, y, is_extract_features=False)
+        processed_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+    else:
+        processed_data, features = feature_extractor(X, y)
+        processed_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        features.to_csv(train_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+
     logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
 
 for sub, vid in s1.train_test_indices['test']:
     X, y = s1.test_data(sub, vid)
-    feature_extractor(X, y).set_index(y.index).to_csv(test_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+    if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+        processed_data, features = feature_extractor(X, y, is_extract_features=False)
+        processed_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+    else:
+        processed_data, features = feature_extractor(X, y)
+        processed_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        features.to_csv(test_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
     logging.info(f'scenario 1: extracted features for test data (sub = {sub} vid = {vid}).')
