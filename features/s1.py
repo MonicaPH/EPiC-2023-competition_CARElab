@@ -50,7 +50,7 @@ s1 = S1()
 for sub, vid in s1.train_test_indices['train']:
     X, y = s1.train_data(sub, vid)
 
-    if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+    if (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
         processed_data, features = feature_extractor(X, y, is_extract_features=False)
         processed_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
     else:
@@ -62,7 +62,7 @@ for sub, vid in s1.train_test_indices['train']:
 
 for sub, vid in s1.train_test_indices['test']:
     X, y = s1.test_data(sub, vid)
-    if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+    if (test_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
         processed_data, features = feature_extractor(X, y, is_extract_features=False)
         processed_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
     else:
