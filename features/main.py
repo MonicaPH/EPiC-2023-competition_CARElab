@@ -71,7 +71,7 @@ def extractor(sub_vid, s, scenario, fold, train_test, data_path, feature_path):
         clean_data, features = feature_extractor(X, y)
         clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         features.to_csv(feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-        logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: extracted features for training data (sub = {sub} vid = {vid}).')
+        logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: extracted features for {train_test} data (sub = {sub} vid = {vid}).')
     except Exception as e:
         logging.error(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""} (sub = {sub} vid = {vid}): {e}')
 
