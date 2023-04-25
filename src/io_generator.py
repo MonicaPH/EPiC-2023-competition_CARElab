@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 import os, sys, multiprocessing, re
 from functools import partial
-from utils import check_dir
+from .utils import check_dir
 
 import logging, datetime
 

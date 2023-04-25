@@ -2,9 +2,9 @@ import pandas as pd
 import multiprocessing
 import numpy as np
 from pathlib import Path
+from io_generator import load_data_dict, load_model_dict
+from utils import check_dir
 from autogluon.tabular import TabularDataset, TabularPredictor
-from src.io_generator import load_data_dict, load_model_dict
-from src.utils import check_dir
 import argparse
 
 parser = argparse.ArgumentParser(description='Train')
@@ -22,7 +22,7 @@ log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 logging.basicConfig(format=log_format, 
                     force=True,
                     handlers=[
-                        logging.FileHandler(f"log/{log_filename}.log"),
+                        logging.FileHandler(f"../log/{log_filename}.log"),
                         logging.StreamHandler()
                         ],
                     level=logging.INFO
