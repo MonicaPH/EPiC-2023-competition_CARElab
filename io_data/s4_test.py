@@ -16,6 +16,8 @@ future_window_size = 50
 
 def func(fold_sub_vid, scenario, prefix, past_window_size, future_window_size):
     fold, sub, vid = fold_sub_vid
+    input_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'test' / 'physiology'
+    output_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'test' / 'annotations'
     X, y = load_io(scenario, fold, sub, vid, 'test', prefix, 
                    past_window_size=past_window_size, future_window_size=future_window_size)
     X.to_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
