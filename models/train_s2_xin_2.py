@@ -36,10 +36,17 @@ def train(X, y, model_path, num_cpus, num_gpus):
 
 prefix = '../'
 
-scenario = 1
-subs = [14, 17, 18, 19]
-vids = [1, 9, 10, 11, 13, 14, 18, 20]
-num_gpus = 1
+# subs: [0, 1, 2, 3, 5,     hpc
+#        7, 9, 11, 12,      xin
+#        13, 14, 15, 17, 18,kun
+#        19, 20, 23, 24,    rtx titan
+#        26, 27, 28, 29,    1080ti1
+#        30, 31, 32, 34,    2080ti
+#        41, 43, 44, 45]    1080ti
+#
+scenario = 2
+subs = [7, 9, 11, 12]
+num_gpus = 2
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'physiology'
 output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'annotations'
@@ -47,13 +54,8 @@ model_path = Path(prefix) / f'models/scenario_{scenario}'
 check_dir(model_path)
 
 for sub in subs:
-    for vid in vids:
-        if (model_path / f'sub_{sub}_vid_{vid}_arousal').exists() and (model_path / f'sub_{sub}_vid_{vid}_valence').exists():
-            logging.info(f'skip sub {sub} vid {vid}')
-            continue
-
-        logging.info(f'start sub {sub} vid {vid}...')
-        X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
-        y = pd.read_csv(output_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
-        train(X, y, model_path / f'sub_{sub}_vid_{vid}', multiprocessing.cpu_count(), num_gpus)
-        logging.info(f'finish sub {sub} vid {vid}.')
+    logging.info(f'start sub {sub} ...')
+    X = pd.read_csv(input_path / f'sub_{sub}.csv', index_col='time')
+    y = pd.read_csv(output_path / f'sub_{sub}.csv', index_col='time')
+    train(X, y, model_path / f'sub_{sub}', multiprocessing.cpu_count(), num_gpus)
+    logging.info(f'finish sub {sub}.')
