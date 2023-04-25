@@ -59,18 +59,18 @@ def extractor(sub_vid, s, scenario, fold, train_test, data_path, feature_path):
         X, y = s.test_data(sub, vid) if fold == -1 else s.test_data(fold, sub, vid)
 
     try:
-        # skip when all exists
-        if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (data_path / f'sub_{sub}_vid_{vid}.csv').exists():
-            logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: clean data and features exists')
-        # save clean data when features exist
-        elif (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-            logging.info(f'scenario {scenario}: features exists')
-            clean_data, features = feature_extractor(X, y, is_extract_features=False)
-            clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-        else:
-            clean_data, features = feature_extractor(X, y)
-            clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-            features.to_csv(feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        # # skip when all exists
+        # if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (data_path / f'sub_{sub}_vid_{vid}.csv').exists():
+        #     logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: clean data and features exists')
+        # # save clean data when features exist
+        # elif (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+        #     logging.info(f'scenario {scenario}: features exists')
+        #     clean_data, features = feature_extractor(X, y, is_extract_features=False)
+        #     clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        # else:
+        clean_data, features = feature_extractor(X, y)
+        clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        features.to_csv(feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: extracted features for training data (sub = {sub} vid = {vid}).')
     except Exception as e:
         logging.error(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""} (sub = {sub} vid = {vid}): {e}')

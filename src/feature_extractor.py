@@ -83,20 +83,15 @@ def feature_extractor(X, y, is_extract_features=True):
     signal = X['emg_trap']
     emg_trap_signal = processor(signal, type)
 
-    emg_zygo_signal.columns = list(map(lambda s: s + '_zygo', list(emg_zygo_signal.columns)))
-    emg_coru_signal.columns = list(map(lambda s: s + '_coru', list(emg_coru_signal.columns)))
-    emg_trap_signal.columns = list(map(lambda s: s + '_trap', list(emg_trap_signal.columns)))
-
-    processed_signal = pd.concat([ecg_signal, bvp_signal, gsr_signal, rsp_signal, emg_zygo_signal, emg_coru_signal, emg_trap_signal], axis=1).set_index(X.index)
 
     if is_extract_features:
-        gsr = analyzer(gsr_signal, y.index, type, 2500, 2500)
-        rsp = analyzer(rsp_signal, y.index, type, 4000, 4000)
-        ecg = analyzer(ecg_signal, y.index, type, 10000, 10000)
-        bvp = analyzer(bvp_signal, y.index, type, 5000, 5000)
-        emg_zygo = analyzer(emg_zygo_signal, y.index, type, 200, 200)
-        emg_coru = analyzer(emg_coru_signal, y.index, type, 200, 200)
-        emg_trap = analyzer(emg_trap_signal, y.index, type, 200, 200)
+        gsr = analyzer(gsr_signal, y.index, Signal.EDA, 2500, 2500)
+        rsp = analyzer(rsp_signal, y.index, Signal.RSP, 4000, 4000)
+        ecg = analyzer(ecg_signal, y.index, Signal.ECG, 10000, 10000)
+        bvp = analyzer(bvp_signal, y.index, Signal.PPG, 5000, 5000)
+        emg_zygo = analyzer(emg_zygo_signal, y.index, Signal.EMG, 200, 200)
+        emg_coru = analyzer(emg_coru_signal, y.index, Signal.EMG, 200, 200)
+        emg_trap = analyzer(emg_trap_signal, y.index, Signal.EMG, 200, 200)
 
         dropped_cols = ['Label', 'Event_Onset']
         emg_zygo = emg_zygo.drop(dropped_cols, axis=1)
@@ -115,5 +110,11 @@ def feature_extractor(X, y, is_extract_features=True):
 
     else:
         extracted_features = None
+
+    emg_zygo_signal.columns = list(map(lambda s: s + '_zygo', list(emg_zygo_signal.columns)))
+    emg_coru_signal.columns = list(map(lambda s: s + '_coru', list(emg_coru_signal.columns)))
+    emg_trap_signal.columns = list(map(lambda s: s + '_trap', list(emg_trap_signal.columns)))
+
+    processed_signal = pd.concat([ecg_signal, bvp_signal, gsr_signal, rsp_signal, emg_zygo_signal, emg_coru_signal, emg_trap_signal], axis=1).set_index(X.index)
 
     return processed_signal, extracted_features
