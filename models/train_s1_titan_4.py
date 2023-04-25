@@ -10,7 +10,7 @@ from utils import check_dir
 import warnings
 import logging, datetime
 
-warnings.filterwarnings("ignore")
+# warnings.filterwarnings("ignore")
 
 log_format = '%(asctime)s [%(levelname)s] %(message)s'
 log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
