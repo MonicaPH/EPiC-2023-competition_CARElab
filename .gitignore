@@ -5,6 +5,7 @@ features/scenario*
 features/figures
 clean_data/scenario*
 io_data/scenario*
+models/scenario*
 
 # torch train logs
 CARElab/MLexperiments
