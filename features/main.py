@@ -1,4 +1,6 @@
 import sys, os 
+import multiprocessing
+from functools import partial
 import argparse
 import pandas as pd
 import numpy as np
@@ -49,6 +51,30 @@ else:
 
 logging.info(f'scenario {scenario}')
 
+def extractor(sub_vid, s, scenario, fold, train_test, data_path, feature_path):
+    sub, vid = sub_vid
+    if train_test == 'train':
+        X, y = s.train_data(sub, vid) if fold == -1 else s.train_data(fold, sub, vid)
+    else:
+        X, y = s.test_data(sub, vid) if fold == -1 else s.test_data(fold, sub, vid)
+
+    try:
+        # skip when all exists
+        if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (data_path / f'sub_{sub}_vid_{vid}.csv').exists():
+            logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: clean data and features exists')
+        # save clean data when features exist
+        elif (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
+            logging.info(f'scenario {scenario}: features exists')
+            clean_data, features = feature_extractor(X, y, is_extract_features=False)
+            clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        else:
+            clean_data, features = feature_extractor(X, y)
+            clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+            features.to_csv(feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+        logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: extracted features for training data (sub = {sub} vid = {vid}).')
+    except Exception as e:
+        logging.error(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""} (sub = {sub} vid = {vid}): {e}')
+
 if scenario == 1:
     train_data_path = clean_data_path / f'scenario_{scenario}' / 'train'
     test_data_path = clean_data_path / f'scenario_{scenario}' / 'test'
@@ -61,46 +87,17 @@ if scenario == 1:
               train_feature_path,
               test_feature_path)
 
-    for sub, vid in s.train_test_indices['train']:
-        X, y = s.train_data(sub, vid)
+    func = partial(extractor, s=s, scenario=1, fold=-1,
+                   train_test='train', data_path=train_data_path, feature_path=train_feature_path)
+    pool_obj = multiprocessing.Pool()
+    pool_obj.map(func, s.train_test_indices['train'])
+    pool_obj.close()
 
-        try:
-            # skip when all exists
-            if (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (train_data_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                logging.info(f'scenario {scenario}: clean data and features exists')
-                continue
-
-            # save clean data when features exist
-            elif (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                logging.info(f'scenario {scenario}: features exists')
-                clean_data, features = feature_extractor(X, y, is_extract_features=False)
-                clean_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-            else:
-                clean_data, features = feature_extractor(X, y)
-                clean_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                features.to_csv(train_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-
-            logging.info(f'scenario 1: extracted features for training data (sub = {sub} vid = {vid}).')
-        except Exception as e:
-            logging.error(f'scenario {scenario} (sub = {sub} vid = {vid}): {e}')
-
-    for sub, vid in s.train_test_indices['test']:
-        X, y = s.test_data(sub, vid)
-
-        try:
-            if (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (train_data_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                continue
-
-            if (test_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                clean_data, features = feature_extractor(X, y, is_extract_features=False)
-                clean_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-            else:
-                clean_data, features = feature_extractor(X, y)
-                clean_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                features.to_csv(test_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-            logging.info(f'scenario {scenario}: extracted features for test data (sub = {sub} vid = {vid}).')
-        except Exception as e:
-            logging.error(f'scenario {scenario} (sub = {sub} vid = {vid}): {e}')
+    func = partial(extractor, s=s, scenario=1, fold=-1,
+                   train_test='test', data_path=test_data_path, feature_path=test_feature_path)
+    pool_obj = multiprocessing.Pool()
+    pool_obj.map(func, s.train_test_indices['test'])
+    pool_obj.close()
 
 else:
     folds = s.fold if args.fold == None else args.fold
@@ -121,39 +118,14 @@ else:
                   train_feature_path,
                   test_feature_path)
 
-        for sub, vid in s.train_test_indices[fold]['train']:
-            try:
-                X, y = s.train_data(fold, sub, vid)
-                # skip when all exists
-                if (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (train_data_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                    continue
+        func = partial(extractor, s=s, scenario=scenario, fold=fold,
+                       train_test='train', data_path=train_data_path, feature_path=train_feature_path)
+        pool_obj = multiprocessing.Pool()
+        pool_obj.map(func, s.train_test_indices[fold]['train'])
+        pool_obj.close()
 
-                # save clean data when features exist
-                elif (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                    clean_data, features = feature_extractor(X, y, is_extract_features=False)
-                    clean_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                else:
-                    clean_data, features = feature_extractor(X, y)
-                    clean_data.to_csv(train_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                    features.to_csv(train_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-
-                logging.info(f'scenario {scenario} fold {fold}: extracted features for training data (sub = {sub} vid = {vid}).')
-            except Exception as e:
-                logging.error(f'scenario {scenario} fold {fold}: (sub = {sub} vid = {vid}) --- {e}')
-
-        for sub, vid in s.train_test_indices[fold]['test']:
-            try:
-                X, y = s.test_data(fold, sub, vid)
-                if (train_feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (train_data_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                    continue
-
-                if (test_feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-                    clean_data, features = feature_extractor(X, y, is_extract_features=False)
-                    clean_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                else:
-                    clean_data, features = feature_extractor(X, y)
-                    clean_data.to_csv(test_data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                    features.to_csv(test_feature_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
-                logging.info(f'scenario {scenario} fold {fold}: extracted features for test data (sub = {sub} vid = {vid}).')
-            except Exception as e:
-                logging.error(f'scenario {scenario} fold {fold}: (sub = {sub} vid = {vid}) --- {e}')
+        func = partial(extractor, s=s, scenario=scenario, fold=fold,
+                       train_test='test', data_path=test_data_path, feature_path=test_feature_path)
+        pool_obj = multiprocessing.Pool()
+        pool_obj.map(func, s.train_test_indices[fold]['test'])
+        pool_obj.close()
