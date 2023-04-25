@@ -7,7 +7,10 @@ import more_itertools
 from scipy.stats import zscore
 
 
-def emg_process(emg_signal, threshold=0.1, sampling_rate=1000, filterCutoff=5):
+def emg_process(emg_signal, threshold=0.1, sampling_rate=1000, filterCutoff=5, savGolWinLen = 0):
+    # Set default Savitsky-Golay Window length
+    if savGolWinLen == 0:
+        savGolWinLen = sampling_rate
 
     # Sanitize input
     emg_signal = nk.signal_sanitize(emg_signal)
@@ -29,7 +32,8 @@ def emg_process(emg_signal, threshold=0.1, sampling_rate=1000, filterCutoff=5):
         rms_data.append(np.sqrt(np.square(window).mean(axis=0)))
     rms_data.extend([0]*leftover_size)
     # low pass to further remove noise from the rms
-    savGolWinLen = sampling_rate
+    
+    # Further smooth the EMG envelope with a Savitsky-Golay filter of third order
     if (sampling_rate%2)==0:
         # savgol window length must be odd
         savGolWinLen = sampling_rate+1
