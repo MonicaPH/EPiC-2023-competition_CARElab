@@ -4,6 +4,8 @@ log/*
 features/scenario*
 features/figures
 
+# torch train logs
+CARElab/MLexperiments
 
 ###### MacOS
 
