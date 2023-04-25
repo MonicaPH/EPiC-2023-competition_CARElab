@@ -29,20 +29,20 @@ logging.basicConfig(format=log_format,
                     )
 
 def train(X, y, model_path, num_cpus, num_gpus):
-    train_data = pd.concat([X, y.drop('valence')], axis=1)
+    train_data = pd.concat([X, y.drop(['valence'], axis=1)], axis=1)
     train_data = TabularDataset(train_data)
-    predictor = TabularPredictor(label='arousal', problem_type='regression', path=model_path / '_arousal', verbosity=0).fit(train_data, ag_args_fit={'num_cpus': num_cpus, 'num_gpus': num_gpus})
+    predictor = TabularPredictor(label='arousal', problem_type='regression', path=str(model_path) + '_arousal', verbosity=0).fit(train_data, ag_args_fit={'num_cpus': num_cpus, 'num_gpus': num_gpus})
     logging.info('arousal model fitted.')
 
-    train_data = pd.concat([X, y.drop('arousal')], axis=1)
+    train_data = pd.concat([X, y.drop(['arousal'], axis=1)], axis=1)
     train_data = TabularDataset(train_data)
-    predictor = TabularPredictor(label='valence', problem_type='regression', path=model_path / '_valence', verbosity=0).fit(train_data, ag_args_fit={'num_cpus': num_cpus, 'num_gpus': num_gpus})
+    predictor = TabularPredictor(label='valence', problem_type='regression', path=str(model_path) + '_valence', verbosity=0).fit(train_data, ag_args_fit={'num_cpus': num_cpus, 'num_gpus': num_gpus})
     logging.info('valence model fitted.')
 
-prefix = './'
+prefix = '../'
 
 data_dict = load_data_dict()
-model_dict = load_model_dict()
+model_dict = load_model_dict(data_dict)
 
 scenario = 1
 for fold, model_list in model_dict[scenario].items():
@@ -54,7 +54,7 @@ for fold, model_list in model_dict[scenario].items():
     for sub_vid_pairs in model_list:
         for sub, vid in sub_vid_pairs:
             logging.info(f'start sub {sub} vid {vid}...')
-            X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+            X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
             y = pd.read_csv(output_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
             train(X, y, model_path / f'sub_{sub}_vid_{vid}', multiprocessing.cpu_count(), args.num_gpus)
             logging.info(f'finish sub {sub} vid {vid}.')
