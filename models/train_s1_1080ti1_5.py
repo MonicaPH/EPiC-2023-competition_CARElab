@@ -39,7 +39,7 @@ prefix = '../'
 scenario = 1
 subs = [30, 31, 32, 33]
 vids = [1, 9, 10, 11, 13, 14, 18, 20]
-num_gpus = 1
+num_gpus = 2
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'physiology'
 output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'annotations'
