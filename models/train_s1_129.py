@@ -48,6 +48,10 @@ check_dir(model_path)
 
 for sub in subs:
     for vid in vids:
+        if (model_path / f'sub_{sub}_vid_{vid}_arousal').exists() and (model_path / f'sub_{sub}_vid_{vid}_valence').exists():
+            logging.info(f'skip sub {sub} vid {vid}')
+            continue
+
         logging.info(f'start sub {sub} vid {vid}...')
         X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
         y = pd.read_csv(output_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
