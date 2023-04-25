@@ -35,7 +35,7 @@ def test(X, model_path, save_path):
     logging.info('valence predicted')
 
     predictions = pd.DataFrame({'time': X.index, 'arousal': pred_arousal, 'valence': pred_valence})
-    predictions.to_csv(save_path, index_label='time')
+    predictions.to_csv(save_path)
 
 prefix = '../'
 
@@ -53,5 +53,5 @@ for sub in subs:
     for vid in vids:
         logging.info(f'start sub {sub} vid {vid}...')
         X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
-        test(X, model_path / f'sub_{sub}_vid_{vid}', save_path / f'sub_{sub}_vid_{vid}')
+        test(X, model_path / f'sub_{sub}_vid_{vid}', save_path / f'sub_{sub}_vid_{vid}.csv')
         logging.info(f'finish sub {sub} vid {vid}.')
