@@ -4,6 +4,7 @@ import numpy as np
 from pathlib import Path
 from autogluon.tabular import TabularDataset, TabularPredictor
 from src.io_generator import load_data_dict, load_model_dict
+from src.utils import check_dir
 import argparse
 
 parser = argparse.ArgumentParser(description='Train')
@@ -48,6 +49,7 @@ for fold, model_list in model_dict[scenario].items():
     input_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train' / 'physiology'
     output_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train' / 'annotations'
     model_path = Path(prefix) / f'models/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}'
+    check_dir(model_path)
 
     for sub_vid_pairs in model_list:
         for sub, vid in sub_vid_pairs:
