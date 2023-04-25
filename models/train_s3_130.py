@@ -2,6 +2,8 @@ import pandas as pd
 import multiprocessing
 import numpy as np
 from pathlib import Path
+import sys, os
+sys.path.append(os.path.relpath("../src/"))
 from io_generator import load_data_dict, load_model_dict
 from utils import check_dir
 from autogluon.tabular import TabularDataset, TabularPredictor
