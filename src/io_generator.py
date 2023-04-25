@@ -165,3 +165,6 @@ def save_training_io(scenario, past_window_size=50, future_window_size=50, prefi
         pool_obj = multiprocessing.Pool()
         pool_obj.map(specific_func, model_list)
         pool_obj.close()
+
+def load_training_io(scenario, fold):
+    pass
