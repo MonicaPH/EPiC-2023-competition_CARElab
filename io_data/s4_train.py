@@ -28,7 +28,7 @@ def func(fold_sub_vid_pairs, input_path, output_path, past_window_size, future_w
     v = 0
     for fold, sub, vid in fold_sub_vid_pairs:
         v = vid 
-        X, y = load_io(2, fold, sub, vid, 'train', '../', past_window_size=past_window_size, future_window_size=future_window_size)
+        X, y = load_io(4, fold, sub, vid, 'train', '../', past_window_size=past_window_size, future_window_size=future_window_size)
         Xs = pd.concat([Xs, X], axis=0)
         ys = pd.concat([ys, y], axis=0)
 
