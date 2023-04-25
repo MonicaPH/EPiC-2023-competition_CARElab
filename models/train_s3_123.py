@@ -5,17 +5,13 @@ from pathlib import Path
 from io_generator import load_data_dict, load_model_dict
 from utils import check_dir
 from autogluon.tabular import TabularDataset, TabularPredictor
-import argparse
-
-parser = argparse.ArgumentParser(description='Train')
-parser.add_argument('--num_gpus', type=int, help='1', required=True, default=1)
-
-args = parser.parse_args()
 
 import warnings
 import logging, datetime
 
 warnings.filterwarnings("ignore")
+
+num_gpus = 1
 
 log_format = '%(asctime)s [%(levelname)s] %(message)s'
 log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -50,5 +46,16 @@ logging.info(f'start arousal 03421...')
 X = pd.read_csv(input_path, index_col='time')
 y = pd.read_csv(output_path, index_col='time')
 train(X, y, target='arousal', drop='valence', model_path=model_path,
-      num_cpus=multiprocessing.cpu_count(), num_gpus=args.num_gpus)
+      num_cpus=multiprocessing.cpu_count(), num_gpus=num_gpus)
 logging.info(f'finish arousal 03421')
+
+input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/physiology/valence_402122.csv'
+output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/annotations/valence_402122.csv'
+model_path = Path(prefix) / f'models/scenario_{scenario}/valence_4102122' 
+check_dir(model_path)
+
+logging.info(f'start valence 4102122...')
+X = pd.read_csv(input_path, index_col='time')
+y = pd.read_csv(output_path, index_col='time')
+train(X, y, target='valence', drop='arousal', model_path=model_path, num_cpus=multiprocessing.cpu_count(), num_gpus=num_gpus)
+logging.info(f'finish valence 4102122')
