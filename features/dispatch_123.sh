@@ -1,2 +1,2 @@
-python main.py --scenario=3 --fold=2
-python main.py --scenario=3 --fold=3
+python3 main.py --scenario=3 --fold=0
+python3 main.py --scenario=3 --fold=1
