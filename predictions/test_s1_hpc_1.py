@@ -34,8 +34,8 @@ def test(X, model_path, save_path):
     pred_valence = predictor_valence.predict(test_data)
     logging.info('valence predicted')
 
-    predictions = pd.DataFrame({'time': X.index, 'arousal': pred_arousal, 'valence': pred_valence}, index='time')
-    predictions.to_csv(save_path)
+    predictions = pd.DataFrame({'time': X.index, 'arousal': pred_arousal, 'valence': pred_valence})
+    predictions.to_csv(save_path, index_label='time')
 
 prefix = '../'
 
