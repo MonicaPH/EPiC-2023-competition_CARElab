@@ -64,7 +64,7 @@ class SequenceEncoder(nn.Module):
         # Assuming uni-directional, so last dim is nhid
         h_n = self.hid_linear(h_n)
 
-        return sampled_output, h_n
+        return sampled_output#, h_n
 
     def init_hidden(self, batch_size):
         """ Initialise the hidden tensors """
