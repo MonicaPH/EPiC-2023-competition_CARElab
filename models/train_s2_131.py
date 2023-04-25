@@ -36,17 +36,13 @@ def train(X, y, model_path, num_cpus, num_gpus):
 
 prefix = '../'
 
-# subs: [0, 1, 2, 3, 5,     hpc
-#        7, 9, 11, 12,      xin
-#        13, 14, 15, 17, 18,kun
-#        19, 20, 23, 24,    rtx titan
-#        26, 27, 28, 29,    1080ti1
-#        30, 31, 32, 34,    2080ti
-#        41, 43, 44, 45]    1080ti
+# subs: [0, 1, 2, 3, 5, 7, 9, 11, 12, 13]     hpc
+#       [14, 15, 17, 18, 19, 20, 23, 24, 26, 27] kun
+#       [28, 29, 30, 31, 32, 34, 41, 43, 44, 45] xin
 #
 scenario = 2
-subs = [13, 14, 15, 17, 18]
-num_gpus = 1
+subs = [14, 15, 17, 18, 19, 20, 23, 24, 26, 27] 
+num_gpus = 2
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'physiology'
 output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'annotations'
