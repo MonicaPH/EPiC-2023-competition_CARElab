@@ -166,5 +166,18 @@ def save_training_io(scenario, past_window_size=50, future_window_size=50, prefi
         pool_obj.map(specific_func, model_list)
         pool_obj.close()
 
-def load_training_io(scenario, fold):
-    pass
+def save_test_io(scenario, past_window_size=50, future_window_size=50, prefix='../'):
+    data_dict = load_data_dict()
+    for fold, model_list in model_dict[scenario].items():
+        input_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train' / 'physiology'
+        output_path = Path(prefix) / f'io_data/scenario_{scenario}' / f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train' / 'annotations'
+        check_dir(input_path, output_path)
+
+        specific_func = partial(func, scenario=scenario, fold=fold,
+                                prefix=prefix, input_path=input_path, output_path=output_path,
+                                past_window_size=past_window_size, future_window_size=future_window_size)
+
+        pool_obj = multiprocessing.Pool()
+        pool_obj.map(specific_func, model_list)
+        pool_obj.close()
+
