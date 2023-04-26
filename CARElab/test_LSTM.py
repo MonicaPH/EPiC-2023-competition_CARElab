@@ -79,20 +79,20 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    models =[x for x in os.listdir('.') if x.endswith(f'{args.sensor}.ckpt')]
+    models = sorted([x for x in os.listdir('.') if x.endswith(f'{args.sensor}.ckpt')])
+    offset = [int(x.split('_')[4][1:]) for x in models]
 
     rmse = np.zeros(len(models))
     for kk, model in enumerate(models):
         print(f'Evaluate model {kk+1}/{len(models)}: {model}')
         args.model = model
         rmse[kk] = run_test(args)
-        off = int(models[kk].split('_')[4][1:])
-        print(f'RMSE ({args.sensor} {off}): {rmse}')
+        print(f'RMSE ({args.sensor} {offset[kk]}): {rmse}')
 
     df = pd.DataFrame(
-        np.concatenate([
-            [int(x.split('_')[4][1:]) for x in models],
+        np.array([
+            offset,
             rmse
-        ]), columns=['offset', 'rmse']
+        ]).transpose(), columns=['offset', 'rmse']
     )
     df.to_csv(f'performance_{args.sensor}.csv')
