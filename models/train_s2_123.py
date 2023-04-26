@@ -44,7 +44,7 @@ scenario = 2
 num_gpus = 1
 
 fold = 1
-vids = [1, 9, 10, 11, 13, 14, 18, 20]
+vids = [0, 2, 9, 10, 11, 13, 14, 20]
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'physiology'
 output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'annotations'
