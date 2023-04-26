@@ -19,6 +19,8 @@ def processor(signal, type, sampling_rate=1000):
         processed_signal, _ = nk.eda_process(signal, sampling_rate=sampling_rate)
     elif type == Signal.RSP:
         processed_signal, _ = nk.rsp_process(signal, sampling_rate=sampling_rate)
+        if processed_signal.RSP_Rate.isna().sum() > 0:
+            processed_signal.RSP_Rate = nk.rsp_rate(processed_signal.RSP_Clean, method='xcorr')
     elif type == Signal.EMG:
         processed_signal, _ = emg_process(signal, sampling_rate=sampling_rate)
 
