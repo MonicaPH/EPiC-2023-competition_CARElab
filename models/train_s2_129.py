@@ -41,17 +41,19 @@ prefix = '../'
 #       [28, 29, 30, 31, 32, 34, 41, 43, 44, 45] xin
 #
 scenario = 2
-subs = [28, 29, 30, 31, 32, 34, 41, 43, 44, 45] # xin
-num_gpus = 1
+num_gpus = 2
+
+fold = 2
+vids = [1, 9, 10, 11, 13, 14, 18, 20]
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'physiology'
 output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train' / 'annotations'
 model_path = Path(prefix) / f'models/scenario_{scenario}'
 check_dir(model_path)
 
-for sub in subs:
-    logging.info(f'start sub {sub} ...')
-    X = pd.read_csv(input_path / f'sub_{sub}.csv', index_col='time')
-    y = pd.read_csv(output_path / f'sub_{sub}.csv', index_col='time')
-    train(X, y, model_path / f'sub_{sub}', multiprocessing.cpu_count(), num_gpus)
-    logging.info(f'finish sub {sub}.')
+for vid in vids:
+    logging.info(f'start fold {fold} vid {vid} ...')
+    X = pd.read_csv(input_path / f'fold_{fold}_vid_{vid}.csv', index_col='time')
+    y = pd.read_csv(output_path / f'fold_{fold}_vid_{vid}.csv', index_col='time')
+    train(X, y, model_path / f'fold_{fold}_vid_{vid}', multiprocessing.cpu_count(), num_gpus)
+    logging.info(f'finish fold {fold} vid {vid}.')
