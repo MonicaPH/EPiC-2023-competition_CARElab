@@ -35,20 +35,20 @@ prefix = '../'
 
 scenario = 3
 
-input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/physiology/arousal_03421.csv'
-output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/annotations/arousal_03421.csv'
-model_path = Path(prefix) / f'models/scenario_{scenario}/arousal_03421' 
-check_dir(model_path)
+# input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/physiology/arousal_03421.csv'
+# output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/annotations/arousal_03421.csv'
+# model_path = Path(prefix) / f'models/scenario_{scenario}/arousal_03421' 
+# check_dir(model_path)
+#
+# logging.info(f'start arousal 03421...')
+# X = pd.read_csv(input_path, index_col='time')
+# y = pd.read_csv(output_path, index_col='time')
+# train(X, y, target='arousal', drop='valence', model_path=model_path,
+#       num_cpus=multiprocessing.cpu_count(), num_gpus=num_gpus)
+# logging.info(f'finish arousal 03421')
 
-logging.info(f'start arousal 03421...')
-X = pd.read_csv(input_path, index_col='time')
-y = pd.read_csv(output_path, index_col='time')
-train(X, y, target='arousal', drop='valence', model_path=model_path,
-      num_cpus=multiprocessing.cpu_count(), num_gpus=num_gpus)
-logging.info(f'finish arousal 03421')
-
-input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/physiology/valence_402122.csv'
-output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/annotations/valence_402122.csv'
+input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/physiology/valence_4102122.csv'
+output_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'train/annotations/valence_4102122.csv'
 model_path = Path(prefix) / f'models/scenario_{scenario}/valence_4102122' 
 check_dir(model_path)
 
