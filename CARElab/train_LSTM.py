@@ -15,6 +15,8 @@ from sequential import SequenceEncoder
 import pytorch_lightning as L
 from pytorch_lightning import seed_everything, Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+from lightning.pytorch.loggers import TensorBoardLogger
+
 
 torch.random.manual_seed(0)
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -27,7 +29,7 @@ def run_train(args):
     checkpoint_dir = os.path.join(args.exp_dir, "checkpoints")
     checkpoint = ModelCheckpoint(
         checkpoint_dir,
-        monitor="Losses/val_loss",
+        monitor="val_loss",
         mode="min",
         save_top_k=3,
         save_weights_only=False,
@@ -35,7 +37,7 @@ def run_train(args):
     )
     train_checkpoint = ModelCheckpoint(
         checkpoint_dir,
-        monitor="Losses/train_loss",
+        monitor="train_loss",
         mode="min",
         save_top_k=3,
         save_weights_only=False,
@@ -57,14 +59,16 @@ def run_train(args):
         callbacks=callbacks,
         reload_dataloaders_every_n_epochs=1,
         gradient_clip_val=10.0,
+        logger=TensorBoardLogger("tb_logs", name=f"LSTM_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset}_{args.sensor[0]}")
     )
 
     model = SequenceEncoder(args.numIn, args.hidden, args.out)
     data_module = DataLoader(
         getDatasetForScenario(args.scenario, args.sensor, args.offset),
-        batch_size=4, shuffle=False, num_workers=4
+        batch_size=64, shuffle=False, num_workers=8
     )
     trainer.fit(LitModel(model), data_module)#, ckpt_path=checkpoint_dir)
+    trainer.save_checkpoint(f'model_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset}_{args.sensor[0]}.ckpt')
 
 
 def getDatasetForScenario(n: int, modality: str, offset: int) -> Dataset:
@@ -90,11 +94,11 @@ class LitModel(L.LightningModule):
         x = x.view(x.size(0), -1)
         y_hat = self.model(x)
         loss = torch.nn.functional.mse_loss(y_hat, y)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, prog_bar=True, logger=True, on_epoch=True)
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=1e-3)
+        return torch.optim.Adam(self.parameters(), lr=1e-5)
 
 
 if __name__ == '__main__':
