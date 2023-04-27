@@ -10,6 +10,8 @@ class Signal(Enum):
     RSP = 4
     EMG = 5
 
+# use specific predefined functions (for signal preprocessing) in the neurokit2 lib
+# return: preprocessed signal
 def processor(signal, type, sampling_rate=1000):
     if type == Signal.ECG:
         processed_signal, _ = nk.ecg_process(signal, sampling_rate=sampling_rate)
@@ -26,6 +28,9 @@ def processor(signal, type, sampling_rate=1000):
 
     return processed_signal
 
+# create preprocessed signal windows with past samples of (window_size_past), current samples and future samples of (window_size_future)
+# use specific predefined functions (for feature extraction) in the neurokit2 lib
+# return: extracted features
 def analyzer(signal, keypoints, type, window_size_past, window_size_future, sampling_rate=1000):
     df = None
     maximum = keypoints.max()
@@ -60,6 +65,8 @@ def analyzer(signal, keypoints, type, window_size_past, window_size_future, samp
     
     return df
 
+# perform preprocessing and feature extractions
+# return: preprocessed signals, extracted features
 def feature_extractor(X, y, is_extract_features=True):
     signal = X['bvp']
     type = Signal.PPG
