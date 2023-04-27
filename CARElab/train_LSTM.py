@@ -68,7 +68,11 @@ def run_train(args):
         batch_size=64, shuffle=False, num_workers=8
     )
     trainer.fit(LitModel(model), data_module)#, ckpt_path=checkpoint_dir)
-    trainer.save_checkpoint(f'model_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset:02}_{args.sensor[0]}.ckpt')
+    if len(args.sensor) > 1:
+        sensorStr = '_'.join(args.sensor)
+    if len(args.sensors) == 8:
+        sensorStr = 'all'
+    trainer.save_checkpoint(f'model_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset:02}_{sensorStr}.ckpt')
 
 
 def getDatasetForScenario(n: int, modality: str, offset: int) -> Dataset:
