@@ -1,8 +1,27 @@
 # introducing the team
 
+Our team is formed by two information science master students, and three professors at different levels. Our specialties are on machine learning, signal processing, and affective research. We are a multinational team, our institutions are located in Japan and The Netherlands. We come from five different countries. Finally, we are keen to understand better the relationship between bodily changes and subjective experience.
+
+## Wei Xin
+
+## Huakun Liu
+
+## Felix Dollack
+
+## Chirag Raman
+
+## Hideaki Uchiyama
+
+## Kiyoshi Kiyokawa
+
+## Monica Perusquia-Hernandez
+
+
 # explaining your approach
 
+
 # describing the repository content
+
 
 # how to run the code
 
