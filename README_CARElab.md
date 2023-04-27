@@ -19,6 +19,7 @@ Our team is formed by two information science master students, and three profess
 
 # explaining your approach
 
+We used a theoretical assumption approach to train multiple weak classifiers, together with late fusion. This approach was done independently for each scenario. General signal preprocessing was done in advance. As an output layer in the algorithm pipeline, we applied a low-pass filter to remove sudden annotation variations that are unlikely to happen.
 
 # describing the repository content
 
