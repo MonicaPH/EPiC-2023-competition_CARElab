@@ -22,7 +22,14 @@ Our team is formed by two information science master students, and three profess
 We used a theoretical assumption approach to train multiple weak classifiers, together with late fusion. This approach was done independently for each scenario. General signal preprocessing was done in advance. As an output layer in the algorithm pipeline, we applied a low-pass filter to remove sudden annotation variations that are unlikely to happen.
 
 # describing the repository content
-
+The repository is organized in folders as follows:
+- **CARElab** : exploratory analysis notebooks
+- **data** : raw data provided for the challenge
+- **features** : data cleaning and feature extraction
+- **io_data** : input and output data generation
+- **models** : model training
+- **results** : solution data files for the challenge submission
+- **src** : util scripts
 
 # how to run the code
 
