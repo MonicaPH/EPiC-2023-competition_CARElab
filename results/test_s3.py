@@ -6,6 +6,7 @@ import sys, os
 sys.path.append(os.path.relpath("../src/"))
 from utils import check_dir
 from dataloader import S3
+from test import test
 import warnings
 import logging, datetime
 
@@ -21,22 +22,6 @@ logging.basicConfig(format=log_format,
                         ],
                     level=logging.INFO
                     )
-
-def test(X, arousal_model_path, valence_model_path, save_path):
-    test_data = TabularDataset(X)
-
-    logging.info(str(arousal_model_path))
-    predictor_arousal = TabularPredictor.load(arousal_model_path)
-    pred_arousal = predictor_arousal.predict(test_data)
-    logging.info('arousal predicted')
-
-    logging.info(str(valence_model_path))
-    predictor_valence = TabularPredictor.load(valence_model_path)
-    pred_valence = predictor_valence.predict(test_data)
-    logging.info('valence predicted')
-
-    predictions = pd.DataFrame({'valence': pred_valence, 'arousal': pred_arousal})
-    predictions.to_csv(save_path)
 
 prefix = '../'
 
