@@ -49,6 +49,15 @@ def run_train(args):
         train_checkpoint,
         lr_monitor,
     ]
+    sensorStr = args.sensor
+    if len(args.sensor) > 1:
+        sensorStr = '_'.join(args.sensor)
+    if 'all' in args.sensor:
+        sensorStr = 'all'
+        args.sensor = [
+            'ecg', 'bvp', 'gsr', 'rsp', 'skt',
+            'emg_zygo', 'emg_coru', 'emg_trap'
+        ]
     trainer = Trainer(
         default_root_dir=args.exp_dir,
         max_epochs=args.epochs,
@@ -59,7 +68,7 @@ def run_train(args):
         callbacks=callbacks,
         reload_dataloaders_every_n_epochs=1,
         gradient_clip_val=10.0,
-        logger=TensorBoardLogger("tb_logs", name=f"LSTM_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset}_{args.sensor[0]}")
+        logger=TensorBoardLogger("tb_logs", name=f"LSTM_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset}_{sensorStr}")
     )
 
     model = SequenceEncoder(args.numIn, args.hidden, args.out)
@@ -68,10 +77,6 @@ def run_train(args):
         batch_size=64, shuffle=False, num_workers=8
     )
     trainer.fit(LitModel(model), data_module)#, ckpt_path=checkpoint_dir)
-    if len(args.sensor) > 1:
-        sensorStr = '_'.join(args.sensor)
-    if len(args.sensors) == 8:
-        sensorStr = 'all'
     trainer.save_checkpoint(f'model_h{args.hidden}_e{args.epochs}_s{args.scenario}_o{args.offset:02}_{sensorStr}.ckpt')
 
 
