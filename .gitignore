@@ -3,6 +3,7 @@ data/*
 log/*
 features/scenario*
 features/figures
+features/dispatch*
 clean_data/scenario*
 io_data/scenario*
 models/scenario*
@@ -10,6 +11,7 @@ backup/
 
 # torch train logs
 CARElab/MLexperiments
+CARElab/tb_logs
 
 ###### MacOS
 

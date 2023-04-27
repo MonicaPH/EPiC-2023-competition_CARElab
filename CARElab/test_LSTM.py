@@ -25,7 +25,7 @@ class LitModel(L.LightningModule):
         loss = nn.functional.mse_loss(y_hat, y)
         self.log("train_loss", loss)
         return loss
-    
+
     def forward(self, data):
         x = data.flatten()
         x = x.unsqueeze(0)
@@ -33,7 +33,7 @@ class LitModel(L.LightningModule):
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=1e-5)
-    
+
 
 def run_test(args) -> float:
     windowLen = 50
@@ -41,7 +41,7 @@ def run_test(args) -> float:
     model = LitModel(SequenceEncoder(windowLen*numSensors, 128, 2))
     model.load_from_checkpoint(checkpoint_path=args.model)
     model.eval()
-    
+
     df_data = pd.read_csv(args.data)
 
     overallLoss = np.zeros(len(df_data))

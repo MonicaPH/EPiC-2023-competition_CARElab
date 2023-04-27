@@ -1,16 +1,15 @@
 import pandas as pd
-import multiprocessing
-import numpy as np
 from pathlib import Path
 from autogluon.tabular import TabularDataset, TabularPredictor
 
 import sys, os
 sys.path.append(os.path.relpath("../src/"))
 from utils import check_dir
+from dataloader import S1
 import warnings
 import logging, datetime
 
-# warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore")
 
 log_format = '%(asctime)s [%(levelname)s] %(message)s'
 log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -34,23 +33,22 @@ def test(X, model_path, save_path):
     pred_valence = predictor_valence.predict(test_data)
     logging.info('valence predicted')
 
-    predictions = pd.DataFrame({'arousal': pred_arousal, 'valence': pred_valence})
+    predictions = pd.DataFrame({'valence': pred_valence, 'arousal': pred_arousal})
     predictions.to_csv(save_path)
 
 prefix = '../'
 
 scenario = 1
-subs = [1, 4, 6, 7, 8]
-vids = [1, 9, 10, 11, 13, 14, 18, 20]
-num_gpus = 2
+num_gpus = 1
 
 input_path = Path(prefix) / f'io_data/scenario_{scenario}' / 'test' / 'physiology'
 model_path = Path(prefix) / f'models/scenario_{scenario}'
-save_path = Path(prefix) / f'predictions/scenario_{scenario}'
+save_path = Path(prefix) / f'results/scenario_{scenario}/test/annotations'
 check_dir(model_path, save_path)
 
-for sub in subs:
-    for vid in vids:
+s1 = S1()
+for sub in s1.test_subs:
+    for vid in s1.test_vids:
         logging.info(f'start sub {sub} vid {vid}...')
         X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
         test(X, model_path / f'sub_{sub}_vid_{vid}', save_path / f'sub_{sub}_vid_{vid}.csv')
