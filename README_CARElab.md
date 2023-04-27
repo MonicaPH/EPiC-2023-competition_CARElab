@@ -10,9 +10,9 @@ Our team is formed by two information science master students, and three profess
 
 ## Chirag Raman
 
-## Hideaki Uchiyama
-
 ## Kiyoshi Kiyokawa
+
+## Hideaki Uchiyama
 
 ## Monica Perusquia-Hernandez
 
