@@ -19,9 +19,10 @@ class EpicDataset(Dataset):
         offset:int=0, windowLen:int=50, is_test:bool=False
     ):
         if ('emg' in modality):
-            tmp = [x for x in modality if not 'emg' in x]
-            tmp.extend(['emg_zygo', 'emg_coru', 'emg_trap'])
-            modality = tmp
+            if (len(modality) == 1) and (len(modality[0]) == 3):
+                tmp = [x for x in modality if not 'emg' in x]
+                tmp.extend(['emg_zygo', 'emg_coru', 'emg_trap'])
+                modality = tmp
 
         self.is_test = is_test
         self.loader = scenario
