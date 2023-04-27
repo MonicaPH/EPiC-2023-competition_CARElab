@@ -7,6 +7,9 @@
 Using one input data to predict one arousal and one valence.
 It consists of past 50 clean signals (50 * 7 dim), current clean signal (7 dim), future 50 clean signal (50 * 7 dim), and 69 features at that time step.
 
+- Input: 776 dim
+- Output: 2 dim
+
 ## training data
 
 - scenario 1: one input corresponds to one subject and one video (240 input data)
