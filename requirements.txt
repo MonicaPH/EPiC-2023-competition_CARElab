@@ -4,3 +4,4 @@ matplotlib
 seaborn
 neurokit2
 more_itertools
+autogluon
