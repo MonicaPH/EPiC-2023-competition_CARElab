@@ -5,3 +5,5 @@ seaborn
 neurokit2
 more_itertools
 autogluon
+torch
+pytorch-lightning
