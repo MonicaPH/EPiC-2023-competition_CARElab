@@ -75,6 +75,7 @@ def extractor(sub_vid, s, scenario, fold, train_test, data_path, feature_path):
     except Exception as e:
         logging.error(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""} (sub = {sub} vid = {vid}): {e}')
 
+# without folds
 if scenario == 1:
     train_data_path = clean_data_path / f'scenario_{scenario}' / 'train'
     test_data_path = clean_data_path / f'scenario_{scenario}' / 'test'
@@ -99,6 +100,7 @@ if scenario == 1:
     pool_obj.map(func, s.train_test_indices['test'])
     pool_obj.close()
 
+# with folds
 else:
     folds = s.fold if args.fold == None else args.fold
 
