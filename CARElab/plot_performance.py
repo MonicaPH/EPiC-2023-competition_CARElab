@@ -10,11 +10,11 @@ if __name__ == '__main__':
 
     df = pd.read_csv(args.file)
 
-    sensor = args.file.split('_')[1].split('.')[0]
+    sensor = ''.join(args.file.split('_')[1:]).split('.')[0]
 
     plt.plot(df.offset/1000, df.rmse, '-o')
     plt.ylabel('RMSE')
     plt.xlabel('Delay [s]')
     plt.grid()
-    plt.title('All Signals')
+    plt.title(f'{sensor.upper()} Signals')
     plt.savefig(f'performance_{sensor}.png')
