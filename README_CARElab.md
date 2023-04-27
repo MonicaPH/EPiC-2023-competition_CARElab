@@ -41,4 +41,10 @@ To reproduce the submitted challenge results:
 5. results/*.py -> for predicting the results
 
 ## Delay analysis
-
+For reporduction of the data used in the delay plots execute the following code in order:
+```
+cd CARElab
+python3 train_LSTM_lag_models.py
+python3 test_LSTM_lag_models.py
+```
+This wil produce CSV files in the form of `performance_XXX.csv`, where XXX is either a short for the physiological signal used (e.g. ecg) or `all` if all signals were used as input.
