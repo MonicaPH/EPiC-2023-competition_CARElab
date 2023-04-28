@@ -8,6 +8,7 @@ import pytorch_lightning as L
 from pytorch_lightning import Trainer
 sys.path.append(os.path.relpath("../src/"))
 from sequential import SequenceEncoder
+from tqdm import tqdm
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -29,6 +30,7 @@ class LitModel(L.LightningModule):
     def forward(self, data):
         x = data.flatten()
         x = x.unsqueeze(0)
+        x = torch.Tensor.to(x)
         return self.model(x)
 
     def configure_optimizers(self):
@@ -45,7 +47,7 @@ def run_test(args) -> float:
     df_data = pd.read_csv(args.data)
 
     overallLoss = np.zeros(len(df_data))
-    for kk, file in enumerate(df_data.filename.values):
+    for file in tqdm(df_data.filename.values):
       fileLoss = 0
       filepath = '../data/scenario_3/fold_1/train'
       data_filename = os.path.join(filepath, 'physiology', file)
@@ -57,15 +59,13 @@ def run_test(args) -> float:
       numBlocks = len(df_x) // windowLen
       endIdx = windowLen * numBlocks
 
-      x = df_x[:endIdx][args.modality].values.reshape(windowLen, -1, numSensors)
+      x = torch.Tensor(df_x[:endIdx][args.modality].values.reshape(windowLen, -1, numSensors))
       y = torch.Tensor(df_y.values)
+      y_hat = torch.zeros((x.shape[1], 2))
       for mm in range(x.shape[1]):
-          y_hat = model(torch.Tensor(x[:, mm, :]))
-
-          loss = torch.sqrt(nn.functional.mse_loss(y_hat, y[mm,:].unsqueeze(0)))
-          fileLoss += loss
-      overallLoss[kk] = fileLoss
-    return sum(overallLoss) / len(df_data)
+          y_hat[mm, :] = model(x[:, mm, :])
+      overallLoss[kk] = torch.sqrt(nn.functional.mse_loss(y_hat, y[1:,:]))
+    return np.mean(overallLoss)
 
 
 if __name__ == '__main__':
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         print(f'Evaluate model {kk+1}/{len(models)}: {model}')
         args.model = model
         rmse[kk] = run_test(args)
-        print(f'RMSE ({args.sensor} {offset[kk]}): {rmse}')
+        print(f'RMSE ({args.sensor} {offset[kk]}): {rmse[kk]}')
 
     df = pd.DataFrame(
         np.array([
