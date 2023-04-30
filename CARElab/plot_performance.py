@@ -12,9 +12,11 @@ if __name__ == '__main__':
 
     sensor = ''.join(args.file.split('_')[1:]).split('.')[0]
 
+    fig = plt.figure()
     plt.plot(df.offset/1000, df.rmse, '-o')
     plt.ylabel('RMSE')
     plt.xlabel('Delay [s]')
     plt.grid()
-    plt.title(f'{sensor.upper()} Signals')
+    #plt.title(f'{sensor.upper()} Signals')
+    fig.tight_layout()
     plt.savefig(f'performance_{sensor}.png')
