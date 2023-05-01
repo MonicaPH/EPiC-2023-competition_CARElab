@@ -19,8 +19,8 @@ def generate_io_for_scenario_1():
             for vid in s1.vids(data_type):
                 kwargs = dict()
                 kwargs['scenario'] = scenario
-                kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'physiology' / f'sub_{sub}_vid_{vid}.csv'
-                kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'annotations' / f'sub_{sub}_vid_{vid}.csv'
+                kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'physiology' / f'sub_{sub}_vid_{vid}.csv'
+                kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'sub_{sub}_vid_{vid}.csv'
                 kwargs['past_window_size'] = past_window_size
                 kwargs['future_window_size'] = future_window_size
                 kwargs['prefix'] = prefix
@@ -60,8 +60,8 @@ def generate_io_for_scenario_2():
         for vid in s2.vids(data_type)[fold]:
             kwargs = dict()
             kwargs['scenario'] = scenario
-            kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'physiology' / f'fold_{fold}_vid_{vid}.csv'
-            kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'annotations' / f'fold_{fold}_vid_{vid}.csv'
+            kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' /  data_type / 'physiology' / f'fold_{fold}_vid_{vid}.csv'
+            kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'fold_{fold}_vid_{vid}.csv'
             kwargs['past_window_size'] = past_window_size
             kwargs['future_window_size'] = future_window_size
             kwargs['prefix'] = prefix
@@ -101,8 +101,8 @@ def generate_io_for_scenario_3():
     kwargs_list = []
     kwargs = dict()
     kwargs['scenario'] = scenario
-    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'physiology' / f'arousal_03421.csv'
-    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'annotations' / f'arousal_03421.csv'
+    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'physiology' / f'arousal_03421.csv'
+    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'arousal_03421.csv'
     kwargs['past_window_size'] = past_window_size
     kwargs['future_window_size'] = future_window_size
     kwargs['prefix'] = prefix
@@ -113,8 +113,8 @@ def generate_io_for_scenario_3():
     # valence 03421
     kwargs = dict()
     kwargs['scenario'] = scenario
-    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'physiology' / f'valence_4102122.csv'
-    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'annotations' / f'valence_4102122.csv'
+    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'physiology' / f'valence_4102122.csv'
+    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'valence_4102122.csv'
     kwargs['past_window_size'] = past_window_size
     kwargs['future_window_size'] = future_window_size
     kwargs['prefix'] = prefix
@@ -125,8 +125,8 @@ def generate_io_for_scenario_3():
     # arousal 10162022
     kwargs = dict()
     kwargs['scenario'] = scenario
-    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'physiology' / f'arousal_10162022.csv'
-    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'annotations' / f'arousal_10162022.csv'
+    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'physiology' / f'arousal_10162022.csv'
+    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'arousal_10162022.csv'
     kwargs['past_window_size'] = past_window_size
     kwargs['future_window_size'] = future_window_size
     kwargs['prefix'] = prefix
@@ -137,8 +137,8 @@ def generate_io_for_scenario_3():
     # arousal 10162022
     kwargs = dict()
     kwargs['scenario'] = scenario
-    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'physiology' / f'valence_031620.csv'
-    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(-1) / data_type / 'annotations' / f'valence_031620.csv'
+    kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'physiology' / f'valence_031620.csv'
+    kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'valence_031620.csv'
     kwargs['past_window_size'] = past_window_size
     kwargs['future_window_size'] = future_window_size
     kwargs['prefix'] = prefix
@@ -178,8 +178,8 @@ def generate_io_for_scenario_4():
         for vid in s4.vids(data_type)[fold]:
             kwargs = dict()
             kwargs['scenario'] = scenario
-            kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'physiology' / f'fold_{fold}_vid_{vid}.csv'
-            kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / fold_path(fold) / data_type / 'annotations' / f'fold_{fold}_vid_{vid}.csv'
+            kwargs['input_path'] = Path(prefix) / f'io_data/scenario_{scenario}' /  data_type / 'physiology' / f'vid_{vid}.csv'
+            kwargs['output_path'] = Path(prefix) / f'io_data/scenario_{scenario}' / data_type / 'annotations' / f'vid_{vid}.csv'
             kwargs['past_window_size'] = past_window_size
             kwargs['future_window_size'] = future_window_size
             kwargs['prefix'] = prefix

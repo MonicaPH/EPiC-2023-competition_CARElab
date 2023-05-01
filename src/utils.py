@@ -38,3 +38,7 @@ def data_splitter(load_dir, save_dir, loader, sub_vid_pairs, enable_sliding_wind
 
         df[:train_length].to_csv(save_dir / 'train' / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         df[train_length:].to_csv(save_dir / 'test' / f'sub_{sub}_vid_{vid}.csv', index_label='time')
+
+
+def fold_path(fold):
+    return "fold_" + str(fold) if fold != -1 else ""
