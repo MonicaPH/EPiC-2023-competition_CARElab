@@ -1,3 +1,5 @@
+# train models for different scenarios
+# usage: python3 train_models -s <1, 2, 3, 4> -n <num_gpus>
 import pandas as pd
 import multiprocessing
 from pathlib import Path
