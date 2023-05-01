@@ -35,10 +35,14 @@ The repository is organized in folders as follows:
 
 ## Challenge
 To reproduce the submitted challenge results:
-1. features/features.py -> for generating clean signals and features
-3. io_data/*.py -> for generating the specific input for each scenario
-4. models/*.py -> for training the models
-5. results/*.py -> for predicting the results
+1. `features/features.py` -> for generating clean signals and features
+2. `io_data/io_data.py` -> for generating the specific input for each scenario
+3. `models/train_models.py` -> for training the models
+4. `results/test_models.py` -> for predicting the results
+
+> Please enter the directory of each script to execute it.
+> 
+> See each script for detailed usage description.
 
 ## Delay analysis
 For reporduction of the data used in the delay plots execute the following code in order:
