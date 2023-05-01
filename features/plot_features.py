@@ -16,7 +16,7 @@ import numpy as np
 from pathlib import Path
 sys.path.append(os.path.relpath("../src/"))
 from dataloader import S2, S1, S3, S4
-from utils import check_dir
+from utils import check_dir, fold_path
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -67,8 +67,6 @@ folds = args.fold if args.fold is not None else s.fold
 
 root_path = Path('../')
 
-def fold_path(fold):
-    return "fold_" + str(fold) if fold != -1 else ""
 
 def plot_features(scenario, fold, sub, vid):
     feature_path = Path(f'scenario_{scenario}') / fold_path(fold) / 'train' / f'sub_{sub}_vid_{vid}.csv'

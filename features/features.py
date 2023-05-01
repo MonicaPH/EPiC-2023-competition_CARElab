@@ -12,8 +12,6 @@ import sys, os
 import multiprocessing
 from functools import partial
 import argparse
-import pandas as pd
-import numpy as np
 from pathlib import Path
 sys.path.append(os.path.relpath("../src/"))
 from dataloader import S2, S1, S3, S4
@@ -73,11 +71,6 @@ def extractor(sub_vid, s, scenario, fold, train_test, data_path, feature_path):
         # skip when all exists
         if (feature_path / f'sub_{sub}_vid_{vid}.csv').exists() and (data_path / f'sub_{sub}_vid_{vid}.csv').exists():
             logging.info(f'scenario {scenario}{" fold " + str(fold) if fold != -1 else ""}: clean data and features exists')
-        # save clean data when features exist
-        elif (feature_path / f'sub_{sub}_vid_{vid}.csv').exists():
-            logging.info(f'scenario {scenario}: features exists')
-            clean_data, features = feature_extractor(X, y, is_extract_features=False)
-            clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
         else:
             clean_data, features = feature_extractor(X, y)
             clean_data.to_csv(data_path / f'sub_{sub}_vid_{vid}.csv', index_label='time')
