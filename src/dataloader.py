@@ -26,6 +26,8 @@
 
 import os, re
 import pandas as pd
+from functools import partial
+from pathlib import Path
 
 class BaseLoader():
     def __init__(self, scenario: int, fold: list, path_prefix='../'):
@@ -38,50 +40,40 @@ class BaseLoader():
                 train_test_groups(...)
         """
         self.scenario = scenario
-        self.fold = fold
+        self.fold = fold if fold != [] else [-1]
         self.path_prefix = path_prefix
         self.keys = ['ecg', 'bvp', 'gsr', 'rsp', 'skt', 'emg_zygo', 'emg_coru', 'emg_trap']
         self.train_subs, self.train_vids, self.test_subs, self.test_vids = self._initialization()
-        if self.fold == []:
-            self.train_data = self._train_data_without_fold
-            self.test_data = self._test_data_without_fold
-            self.train_test_indices = self._train_test_indices_without_fold
-        else:
-            self.train_data = self._train_data_with_fold
-            self.test_data = self._test_data_with_fold
-            self.train_test_indices = self._train_test_indices_with_fold
 
+        self.train_data = self._train_data if self.fold[0] != -1 else partial(self._train_data, -1)
+        self.test_data = self._test_data if self.fold[0] != -1 else partial(self._test_data, -1)
+        self.train_test_indices = self._train_test_indices_with_fold if self.fold[0] != -1 else self._train_test_indices_without_fold
     
     def _initialization(self):
         """
             collect subs and vids
         """
-        if self.fold == []:
-            filenames = sorted(os.listdir(os.path.join(self.path_prefix, f'data/scenario_{self.scenario}/train/physiology')),
-                       key=lambda s: (int(re.findall(r'(?<=sub_)\d+', s)[0]), int(re.findall(r'(?<=vid_)\d+', s)[0])))
-            train_subs = list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))
-            train_vids = list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))
+        train_subs = []
+        train_vids = []
+        test_subs = []
+        test_vids = []
+        for i in self.fold:
+            filenames = os.listdir(Path(self.path_prefix) / 
+                                   f'data/scenario_{self.scenario}' /
+                                   f'{"fold_" + str(i) if i != -1 else ""}' / 'train/physiology')
+            train_subs.append(sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))))
+            train_vids.append(sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))))
             
-            filenames = sorted(os.listdir(os.path.join(self.path_prefix, f'data/scenario_{self.scenario}/test/physiology')),
-                       key=lambda s: (int(re.findall(r'(?<=sub_)\d+', s)[0]), int(re.findall(r'(?<=vid_)\d+', s)[0])))
-            test_subs = list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))
-            test_vids = list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))
-            
+            filenames = os.listdir(Path(self.path_prefix) / 
+                                   f'data/scenario_{self.scenario}' /
+                                   f'{"fold_" + str(i) if i != -1 else ""}' / 'test/physiology')
+            test_subs.append(sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))))
+            test_vids.append(sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))))
+        
+        if self.fold[0] != -1:
+            return train_subs, train_vids, test_subs, test_vids
         else:
-            train_subs = []
-            train_vids = []
-            test_subs = []
-            test_vids = []
-            for i in self.fold:
-                filenames = os.listdir(os.path.join(self.path_prefix, f'data/scenario_{self.scenario}/fold_{i}/train/physiology'))
-                train_subs.append(sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))))
-                train_vids.append(sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))))
-                
-                filenames = os.listdir(os.path.join(self.path_prefix, f'data/scenario_{self.scenario}/fold_{i}/test/physiology'))
-                test_subs.append(sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames]))))
-                test_vids.append(sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames]))))
-            
-        return train_subs, train_vids, test_subs, test_vids
+            return train_subs[0], train_vids[0], test_subs[0], test_vids[0]
     
     def _load_data(self, prefix, sub, vid, features):
         features = self._check_features(features)
@@ -90,7 +82,7 @@ class BaseLoader():
     
     def _check_features(self, features):
         assert type(features) == str or type(features) == list, 'The type of <features> should be str or list'
-            
+
         if type(features) == str:
             features = [features]
         else:
@@ -101,33 +93,21 @@ class BaseLoader():
         
         return features
     
-    def _train_data_without_fold(self, sub: int, vid: int, features=[], root_dir='data'):
+    def _train_data(self, fold:int, sub: int, vid: int, features=[]):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/train'), sub, vid, features)
+        return self._load_data(Path(f'data/scenario_{self.scenario}') /
+                               f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train', sub, vid, features)
     
-    def _test_data_without_fold(self, sub: int, vid: int, features=[], root_dir='data'):
+    def _test_data(self, fold:int, sub: int, vid: int, features=[]):
         """
             features: list or str
             return X, y
         """
-        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/test'), sub, vid, features)
-
-    def _train_data_with_fold(self, fold:int, sub: int, vid: int, features=[], root_dir='data'):
-        """
-            features: list or str
-            return X, y
-        """
-        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/fold_{fold}/train'), sub, vid, features)
-
-    def _test_data_with_fold(self, fold:int, sub: int, vid: int, features=[], root_dir='data'):
-        """
-            features: list or str
-            return X, y
-        """
-        return self._load_data(os.path.join(root_dir, f'scenario_{self.scenario}/fold_{fold}/test'), sub, vid, features)
+        return self._load_data(Path(f'data/scenario_{self.scenario}') /
+                               f'{"fold_" + str(fold) if fold != -1 else ""}' / 'test', sub, vid, features)
 
     @property
     def _train_test_indices_without_fold(self):
@@ -148,6 +128,23 @@ class BaseLoader():
                 'train': [(sub, vid) for vid in self.train_vids[i] for sub in self.train_subs[i]],
                 'test': [(sub, vid) for vid in self.test_vids[i] for sub in self.test_subs[i]]
             } for i in self.fold]
+
+    def subs(self, type):
+        if type is 'train':
+            return self.train_subs
+        elif type is 'test':
+            return self.test_subs
+        else:
+            raise Exception("Type should be train or test.")
+
+    def vids(self, type):
+        if type is 'train':
+            return self.train_vids
+        elif type is 'test':
+            return self.test_vids
+        else:
+            raise Exception("Type should be train or test.")
+
 
 
 class S1(BaseLoader):
