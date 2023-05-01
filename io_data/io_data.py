@@ -1,3 +1,6 @@
+# generate input and output for the models
+# usage: python3 io_data.py -s <1, 2, 3, 4> -t <train or test>
+
 import os, sys
 sys.path.append(os.path.relpath("../src/"))
 from pathlib import Path
