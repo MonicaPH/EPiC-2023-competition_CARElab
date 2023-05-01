@@ -44,6 +44,23 @@ To reproduce the submitted challenge results:
 > 
 > See each script for detailed usage description.
 
+Example (Scenario 1)
+```sh
+# generate clean signals and features
+$ cd features
+$ python3 features.py -s 1 
+# generate specific input
+$ cd ../io_data
+$ python3 io_data.py -s 1 -t 'train'
+$ python3 io_data.py -s 1 -t 'test'
+# train the model
+$ cd ../models
+$ python3 train_models.py -s 1 -n 1
+# predict the result for test data
+$ cd ../results
+$ python3 test_models -s 1
+```
+
 ## Delay analysis
 For reporduction of the data used in the delay plots execute the following code in order:
 ```
