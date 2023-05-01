@@ -1,5 +1,12 @@
 # generate input and output for the models
 # usage: python3 io_data.py -s <1, 2, 3, 4> -t <train or test>
+# 
+# the input of test data in each scenario corresponds to one file (one sub and one vid)
+# the input of train data in
+#    scenario 1: one sub and one vid
+#    scenario 2: eight per fold, each input corresponds to one video 30 subs
+#    scenario 3: two input for arousal, two input for valence
+#    scenario 4: four per fold, each input corresponds to one video
 
 import os, sys
 sys.path.append(os.path.relpath("../src/"))
