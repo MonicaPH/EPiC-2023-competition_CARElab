@@ -46,14 +46,14 @@ To reproduce the submitted challenge results:
 
 Example (Scenario 1)
 ```sh
-# generate clean signals and features
+# generate clean signals and features (-s scenario)
 $ cd features
 $ python3 features.py -s 1 
 # generate specific input
 $ cd ../io_data
 $ python3 io_data.py -s 1 -t 'train'
 $ python3 io_data.py -s 1 -t 'test'
-# train the model
+# train the model (-n num_gpus)
 $ cd ../models
 $ python3 train_models.py -s 1 -n 1
 # predict the result for test data
