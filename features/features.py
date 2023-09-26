@@ -97,11 +97,11 @@ for fold in folds:
     func = partial(extractor, s=s, scenario=scenario, fold=fold,
                    train_test='train', data_path=train_data_path, feature_path=train_feature_path)
     pool_obj = multiprocessing.Pool()
-    pool_obj.map(func, s.train_test_indices['train'])
+    pool_obj.map(func, s.train_test_indices[fold]['train'])
     pool_obj.close()
 
     func = partial(extractor, s=s, scenario=scenario, fold=fold,
                    train_test='test', data_path=test_data_path, feature_path=test_feature_path)
     pool_obj = multiprocessing.Pool()
-    pool_obj.map(func, s.train_test_indices['test'])
+    pool_obj.map(func, s.train_test_indices[fold]['test'])
     pool_obj.close()
