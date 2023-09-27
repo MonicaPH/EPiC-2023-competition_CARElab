@@ -50,6 +50,9 @@ Example (Scenario 1)
 $ cd features
 $ python3 features.py -s 1 
 # generate specific input
+# Note -- you might encounter the following error:
+#  FileExistsError: [Errno 17] File exists...
+# To resolve the problem simply rerun the same command.
 $ cd ../io_data
 $ python3 io_data.py -s 1 -t 'train'
 $ python3 io_data.py -s 1 -t 'test'
