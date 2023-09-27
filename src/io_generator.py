@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 
 log_format = '%(asctime)s [%(levelname)s] %(message)s'
 log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-logging.basicConfig(format=log_format, 
+logging.basicConfig(format=log_format,
                     force=True,
                     handlers=[
                         logging.FileHandler(f"../log/{log_filename}.log"),
@@ -32,9 +32,9 @@ def create_sliding_window(X, y, past_window_size=50, future_window_size=50):
         new_cols_past = pd.concat([X.shift(i) for i in range(past_window_size+1)], axis=1)
     if future_window_size > 0:
         new_cols_future = pd.concat([X.shift(-i) for i in range(1, future_window_size+1)], axis=1)
-    
+
     new_X = pd.concat([new_cols_past, new_cols_future], axis=1).dropna()
-    
+
     start = np.intersect1d(y.index.tolist(), new_X.index.tolist()).min()
     end = np.intersect1d(y.index.tolist(), new_X.index.tolist()).max()
 
@@ -43,33 +43,33 @@ def create_sliding_window(X, y, past_window_size=50, future_window_size=50):
 def load_data_dict(prefix='../'):
     scenarios = [1, 2, 3, 4]
     folds = [[-1], [0, 1, 2, 3, 4], [0, 1, 2, 3], [0, 1]]
-    
+
     data_dict = {}
     data_dict['scenarios'] = scenarios
     data_dict['folds'] = folds
     for i, scenario in enumerate(scenarios):
         data_dict[scenario] = dict()
-        
+
         for fold in folds[i]:
             data_dict[scenario][fold] = dict()
-            
-            filenames = os.listdir(Path(prefix) / 
+
+            filenames = os.listdir(Path(prefix) /
                                    f'data/scenario_{scenario}' /
                                    f'{"fold_" + str(fold) if fold != -1 else ""}' / 'train/physiology')
             train_subs = sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames])))
             train_vids = sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames])))
 
-            filenames = os.listdir(Path(prefix) / 
+            filenames = os.listdir(Path(prefix) /
                                    f'data/scenario_{scenario}' /
                                    f'{"fold_" + str(fold) if fold != -1 else ""}' / 'test/physiology')
             test_subs = sorted(list(set([int(re.findall(r'(?<=sub_)\d+', s)[0]) for s in filenames])))
             test_vids = sorted(list(set([int(re.findall(r'(?<=vid_)\d+', s)[0]) for s in filenames])))
-            
+
             data_dict[scenario][fold]['train_subs'] = train_subs
             data_dict[scenario][fold]['train_vids'] = train_vids
             data_dict[scenario][fold]['test_subs'] = test_subs
             data_dict[scenario][fold]['test_vids'] = test_vids
-    
+
     return data_dict
 
 def load_model_dict(data_dict):
@@ -77,21 +77,21 @@ def load_model_dict(data_dict):
     # scenario 1, 240 models
     for scenario in data_dict['scenarios']:
         model_dict[scenario] = dict()
-        
+
     for fold in data_dict[1].keys():
         model_dict[1][fold] = [[(sub, vid)] for sub in data_dict[1][-1]['train_subs'] for vid in data_dict[1][-1]['train_vids']]
-    
+
     # scenario 2, 30 models
     for fold in data_dict[2].keys():
         model_dict[2][fold] = [[(sub, vid) for vid in data_dict[2][fold]['train_vids']] for sub in data_dict[2][fold]['train_subs']]
-        
+
     # scenario 3, 2 models
     pass
 
     # scenario 4
     for fold in data_dict[4].keys():
         model_dict[4][fold] = [[(sub, vid) for sub in data_dict[4][fold]['train_subs']] for vid in data_dict[4][fold]['train_vids']]
-       
+
     return model_dict
 
 def load_raw_data(scenario, fold, sub, vid, train_test, prefix='../'):
