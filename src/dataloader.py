@@ -33,7 +33,7 @@ import pandas as pd
 
 
 class BaseLoader:
-    def __init__(self, scenario: int, fold: list, path_prefix="../"):
+    def __init__(self, scenario: int, fold: list, path_prefix="../", data="data"):
         """
         property:
             train_subs, train_vids, test_subs, test_vids
@@ -45,6 +45,7 @@ class BaseLoader:
         self.scenario = scenario
         self.fold = fold if fold != [] else [-1]
         self.path_prefix = path_prefix
+        self.data_path = data
         self.keys = [
             "ecg",
             "bvp",
@@ -85,7 +86,7 @@ class BaseLoader:
         for i in self.fold:
             filenames = os.listdir(
                 Path(self.path_prefix)
-                / f"data/scenario_{self.scenario}"
+                / f"{self.data_path}/scenario_{self.scenario}"
                 / f'{"fold_" + str(i) if i != -1 else ""}'
                 / "train/physiology"
             )
@@ -106,7 +107,7 @@ class BaseLoader:
 
             filenames = os.listdir(
                 Path(self.path_prefix)
-                / f"data/scenario_{self.scenario}"
+                / f"{self.data_path}/scenario_{self.scenario}"
                 / f'{"fold_" + str(i) if i != -1 else ""}'
                 / "test/physiology"
             )
@@ -165,7 +166,7 @@ class BaseLoader:
         return X, y
         """
         return self._load_data(
-            Path(f"data/scenario_{self.scenario}")
+            Path(f"{self.data_path}/scenario_{self.scenario}")
             / f'{"fold_" + str(fold) if fold != -1 else ""}'
             / "train",
             sub,
@@ -179,7 +180,7 @@ class BaseLoader:
         return X, y
         """
         return self._load_data(
-            Path(f"data/scenario_{self.scenario}")
+            Path(f"{self.data_path}/scenario_{self.scenario}")
             / f'{"fold_" + str(fold) if fold != -1 else ""}'
             / "test",
             sub,
@@ -234,8 +235,8 @@ class BaseLoader:
 
 
 class S1(BaseLoader):
-    def __init__(self, path_prefix="../"):
-        super().__init__(1, [], path_prefix)
+    def __init__(self, path_prefix="../", data="data"):
+        super().__init__(1, [], path_prefix, data)
 
     def train_test_groups(self):
         return [
@@ -246,8 +247,8 @@ class S1(BaseLoader):
 
 
 class S2(BaseLoader):
-    def __init__(self, path_prefix="../"):
-        super().__init__(2, [0, 1, 2, 3, 4], path_prefix)
+    def __init__(self, path_prefix="../", data="data"):
+        super().__init__(2, [0, 1, 2, 3, 4], path_prefix, data)
 
     def train_test_groups(self, same_vids=True):
         """
@@ -285,8 +286,8 @@ class S2(BaseLoader):
 
 
 class S3(BaseLoader):
-    def __init__(self, path_prefix="../"):
-        super().__init__(3, [0, 1, 2, 3], path_prefix)
+    def __init__(self, path_prefix="../", data="data"):
+        super().__init__(3, [0, 1, 2, 3], path_prefix, data)
 
     def train_test_groups(self, same_subs=True):
         """
@@ -332,8 +333,8 @@ class S3(BaseLoader):
 
 
 class S4(BaseLoader):
-    def __init__(self, path_prefix="../"):
-        super().__init__(4, [0, 1], path_prefix)
+    def __init__(self, path_prefix="../", data="data"):
+        super().__init__(4, [0, 1], path_prefix, data)
 
     def train_test_groups(self):
         pass
