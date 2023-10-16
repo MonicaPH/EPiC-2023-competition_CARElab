@@ -18,12 +18,12 @@ def test(X, arousal_model_path, valence_model_path, save_path, late_fusion=False
     test_data = TabularDataset(X)
 
     # average the results from all models
-    if late_fusion:
+    if late_fusion == False:
         arousal = []
         valence = []
         for one_model_path in arousal_model_path:
             arousal.append(TabularPredictor.load(str(one_model_path)).predict(test_data))
-        for one_model_path in arousal_model_path:
+        for one_model_path in valence_model_path:
             valence.append(TabularPredictor.load(str(one_model_path)).predict(test_data))
         arousal = pd.concat(arousal, axis=1).mean(axis=1)
         valence = pd.concat(valence, axis=1).mean(axis=1)
