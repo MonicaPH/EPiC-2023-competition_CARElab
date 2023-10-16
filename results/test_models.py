@@ -8,7 +8,7 @@ import sys, os
 sys.path.append(os.path.relpath("../src/"))
 from dataloader import S1, S2, S3, S4
 from utils import check_dir
-from test import test
+from test_model import test
 import warnings
 warnings.filterwarnings("ignore")
 import logging, datetime
