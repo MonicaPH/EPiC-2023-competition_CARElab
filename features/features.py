@@ -8,7 +8,7 @@ args:
     -f: fold,  (e.g., -f 1 -f 2)
 """
 
-import sys, os 
+import sys, os
 import multiprocessing
 from functools import partial
 import argparse
@@ -25,7 +25,7 @@ warnings.filterwarnings("ignore")
 
 log_format = '%(asctime)s [%(levelname)s] %(message)s'
 log_filename = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-logging.basicConfig(format=log_format, 
+logging.basicConfig(format=log_format,
                     force=True,
                     handlers=[
                         logging.FileHandler(f"../log/{log_filename}.log"),
