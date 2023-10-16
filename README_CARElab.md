@@ -32,6 +32,7 @@ The repository is organized in folders as follows:
 - **src** : util scripts
 
 # how to run the code
+Use Python 3.10.6
 
 ## Challenge
 To reproduce the submitted challenge results:
@@ -83,3 +84,9 @@ This work is licensed under a
 [cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
 [cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
 [cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+
+## Troubleshooting
+If you see an error similar to `libcublas.so.11: undefined symbol: cublasLtGetStatusString` run:
+```
+pip uninstall nvidia_cublas_cu11
+```
