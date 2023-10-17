@@ -16,6 +16,8 @@ def create_sliding_window_features(X, y, window_size=50):
 
 def check_dir(*dirs):
     for d in dirs:
+        if d.suffix != "":
+            d = d.parent
         if not d.exists():
             d.mkdir(parents=True)
 

@@ -37,7 +37,7 @@ def generate_io_for_scenario_1():
 
 def generate_io_for_scenario_2():
     s2 = S2(prefix)
-    if data_type is 'test':
+    if data_type == 'test':
         kwargs_list = []
         for fold in s2.fold:
             for sub in s2.subs(data_type)[fold]:
@@ -79,7 +79,7 @@ def generate_io_for_scenario_2():
 
 def generate_io_for_scenario_3():
     s3 = S3(prefix)
-    if data_type is 'test':
+    if data_type == 'test':
         kwargs_list = []
         for fold in s3.fold:
             for sub in s3.subs(data_type)[fold]:
@@ -155,7 +155,7 @@ def generate_io_for_scenario_3():
 
 def generate_io_for_scenario_4():
     s4 = S4(prefix)
-    if data_type is 'test':
+    if data_type == 'test':
         kwargs_list = []
         for fold in s4.fold:
             for sub in s4.subs(data_type)[fold]:
