@@ -42,7 +42,9 @@ for fold in folds:
     input_path = Path(f'../io_data/scenario_{scenario}/fold_{fold}/test/physiology')
     for sub in s2.test_subs[fold]:
         for vid in s2.test_vids[fold]:
+            a_model_list = model_path / f'fold_{fold}_vid_{vid}_arousal'
+            v_model_list = model_path / f'fold_{fold}_vid_{vid}_valence'
             logging.info(f'start predicting fold {fold} sub {sub} vid {vid} ...')
             X = pd.read_csv(input_path / f'sub_{sub}_vid_{vid}.csv', index_col='time')
-            test(X, model_path / f'fold_{fold}_vid_{vid}', save_path / f'sub_{sub}_vid_{vid}.csv')
+            test(X, a_model_list, v_model_list, save_path / f'sub_{sub}_vid_{vid}.csv')
             logging.info(f'fold {fold} sub {sub} vid {vid} finished.')

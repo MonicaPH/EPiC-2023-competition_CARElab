@@ -25,11 +25,11 @@ logging.basicConfig(format=log_format,
 def test(X, model_path, save_path):
     test_data = TabularDataset(X)
 
-    predictor_arousal = TabularPredictor.load(str(model_path) + '_arousal')
+    predictor_arousal = TabularPredictor.load(str(model_path) + '_arousal', require_py_version_match=False)
     pred_arousal = predictor_arousal.predict(test_data)
     logging.info('arousal predicted')
 
-    predictor_valence = TabularPredictor.load(str(model_path) + '_valence')
+    predictor_valence = TabularPredictor.load(str(model_path) + '_valence', require_py_version_match=False)
     pred_valence = predictor_valence.predict(test_data)
     logging.info('valence predicted')
 

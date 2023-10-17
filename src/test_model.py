@@ -11,7 +11,6 @@ def test(X, a_model_path, v_model_path, saved_path, late_fusion=False):
     """
     test_data = TabularDataset(X)
 
-    print(late_fusion)
     if late_fusion == True:
         arousal = []
         valence = []
