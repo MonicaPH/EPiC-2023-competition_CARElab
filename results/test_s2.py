@@ -4,7 +4,7 @@ import sys, os
 sys.path.append(os.path.relpath("../src/"))
 from utils import check_dir
 from dataloader import S2
-from test import test
+from test_model import test
 import warnings
 import logging, datetime
 import argparse
