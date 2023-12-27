@@ -1,27 +1,44 @@
-# introducing the team
+# Citation
+
+If you use any of the resources provided on this page in any of your publications we ask you to cite the following work:
+
+[**Ensemble Learning to Assess Dynamics of Affective Experience Ratings and Physiological Change**](https://arxiv.org/abs/2312.16036) Felix Dollack, Kiyoshi Kiyokawa, Huakun Liu, Monica Perusquia-Hernandez, Chirag Raman, Hideaki Uchiyama and Xin Wei, arxiv 2023
+
+```
+@misc{dollack2023ensemble,
+      title={Ensemble Learning to Assess Dynamics of Affective Experience Ratings and Physiological Change},
+      author={Felix Dollack and Kiyoshi Kiyokawa and Huakun Liu and Monica Perusquia-Hernandez and Chirag Raman and Hideaki Uchiyama and Xin Wei},
+      year={2023},
+      eprint={2312.16036},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
+# Introducing the team
 
 Our team is formed by two information science master students, and three professors at different levels. Our specialties are on machine learning, signal processing, and affective research. We are a multinational team, our institutions are located in Japan and The Netherlands. We come from five different countries. Finally, we are keen to understand better the relationship between bodily changes and subjective experience.
 
-## Xin Wei
+### Xin Wei
 
-## Huakun Liu
+### Huakun Liu
 
-## Felix Dollack
+### Felix Dollack
 
-## Chirag Raman
+### Chirag Raman
 
-## Kiyoshi Kiyokawa
+### Kiyoshi Kiyokawa
 
-## Hideaki Uchiyama
+### Hideaki Uchiyama
 
-## Monica Perusquia-Hernandez
+### Monica Perusquia-Hernandez
 
 
-# explaining your approach
+# Explain your approach
 
 We used a theoretical assumption approach to train multiple weak classifiers, together with late fusion. This approach was done independently for each scenario. General signal preprocessing was done in advance. As an output layer in the algorithm pipeline, we applied a low-pass filter to remove sudden annotation variations that are unlikely to happen.
 
-# describing the repository content
+# Describing the repository content
 The repository is organized in folders as follows:
 - **CARElab** : exploratory analysis notebooks
 - **data** : raw data provided for the challenge
@@ -31,7 +48,7 @@ The repository is organized in folders as follows:
 - **results** : solution data files for the challenge submission
 - **src** : util scripts
 
-# how to run the code
+# How to run the code
 Use Python 3.10.6
 
 ## Challenge
